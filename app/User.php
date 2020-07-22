@@ -36,4 +36,9 @@ class User extends \TCG\Voyager\Models\User
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+    function scopeDoctor($query)
+    {
+        return $query->where('role_id', 3);
+        //return dd($this->role);
+    }
 }

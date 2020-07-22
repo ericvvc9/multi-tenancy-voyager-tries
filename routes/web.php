@@ -22,3 +22,7 @@ Route::get('/', function () {
 Route::group(['prefix' => 'admin'], function () {
     Voyager::routes();
 });
+
+Route::get('/storage/{path}', '\App\Http\Controllers\HynOverrideMediaController')
+    ->where('path', '.+')
+    ->name('tenant.media');
