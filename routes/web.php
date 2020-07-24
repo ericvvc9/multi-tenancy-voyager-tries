@@ -14,14 +14,19 @@ use TCG\Voyager\Facades\Voyager;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
 
+Route::get('/', 'HomeController@index');
+Route::get('/software', 'HomeController@software');
+Route::get('/pricing', 'HomeController@pricing');
+Route::get('/blog', 'HomeController@blog');
+Route::get('/contact', 'HomeController@contact');
+Route::get('/oauth', 'HomeController@oauth');
 
 Route::group(['prefix' => 'admin'], function () {
     Voyager::routes();
 });
+
+Route::get('{catchall?}', 'CatchAllController@handle')->where('catchall', '^(?!(api|static|storage)).*$');
 
 Route::get('/storage/{path}', '\App\Http\Controllers\HynOverrideMediaController')
     ->where('path', '.+')

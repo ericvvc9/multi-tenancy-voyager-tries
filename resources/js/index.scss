@@ -1,0 +1,355 @@
+@import "~prismjs/themes/prism-tomorrow";
+@import "./assets/scss/app.scss";
+@import "~react-table/react-table.css";
+@import "~react-big-calendar/lib/addons/dragAndDrop/styles.scss";
+@import "~react-big-calendar/lib/css/react-big-calendar.css";
+
+html {
+  font-size: 14px;
+}
+img {
+  max-width: 100%;
+}
+
+.header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.menu {
+  display: flex;
+  flex-direction: row;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  background-color: #529CAE;
+  flex-wrap: wrap;
+  color: white;
+  .menu-item {
+    padding: 15px;
+    flex:1;
+    color: white;
+    text-align: center;
+    &.selected, &:hover {
+      background-color: rgba(0, 0, 0, 0.061);
+    }
+  }
+}
+.wrap-tabs {
+  display: flex;
+  flex-direction: row;
+}
+.menu-list {
+  .menu-tab {
+    border: 1px solid #529CAE;
+    border-top: 0;
+    position: relative;
+    padding: 15px;
+    color:#529CAE;
+    cursor: pointer;
+    &::after {
+      content: "";
+      width: 1px;
+      position: absolute;
+      height: calc(100% - 0px);
+      right: -1px;
+      background: #f8f8f8!important;
+      top: 0px;
+    }
+    &.active {
+      font-weight: bold;
+      &::after {
+        content: "";
+        width: 2px;
+        position: absolute;
+        height: calc(100% - 0px);
+        right: -2px;
+        background: #f8f8f8!important;
+        top: 0px;
+      }
+    }
+    &:first-child {
+      border-top: 1px solid #529CAE;
+    }
+  }
+}
+.menu-table {
+  flex: 1;
+  border: 1px solid #529CAE;
+  padding: 1rem;
+  overflow: auto;
+}
+.content {
+  border: 1px solid #529CAE;
+}
+.input-wrapper {
+  position: relative;
+  width: 25rem;
+  margin: 0rem 1rem;
+  max-width: 100%;
+  color: white;
+  margin-top:1rem;
+  &.full {
+    width: 100%;
+  }
+  .input {
+    width: 100%;
+    border-radius: 30px;
+    padding: 0.325rem 0.625rem;
+    border: 0;
+  }
+}
+.custom-wrap-patient {
+  display: flex;
+}
+
+vr {
+  height: 287px;
+  width: 1px;
+  display: flex;
+  flex: 1;
+  min-width: 1px;
+  max-width: 1px;
+  margin: 0 10px;
+}
+
+.checkbox-wrap {
+  display: flex;
+  flex-direction: row;
+  //margin: 0;
+  //.input-wrapper .input
+  .checkbox {
+    width: 25px;
+  }
+}
+.link {
+  color: white
+}
+.button {
+  background-color: white;
+  border:0;
+  border-radius: 15px;
+  padding: 0.325rem 0.625rem;
+  color: #529CAE;
+  font-weight: bold;
+  margin: 1rem 0;
+}
+.container-login {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+.login-wrapper {
+  background:#529CAE;
+  width: 30rem;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  max-width: 100%;
+  padding: 5rem;
+  border-top-left-radius: 2rem;
+  border-bottom-right-radius: 2rem;
+}
+.custom-wrapper {
+  background:#529CAE;
+  width: 40rem;
+  display: flex;
+  flex-direction: column;
+  max-width: 90%;
+  padding: 1rem 3rem ;
+  border-top-left-radius: 2rem;
+  border-bottom-right-radius: 2rem;
+  color: white;
+  position: relative;
+  &.large {
+    width: 110rem;
+  }
+}
+
+.close-icon {
+  position: absolute;
+  right: 0;
+  top: 0;
+  color: white;
+  opacity: 1;
+  margin-right: .5rem;
+  margin-top: 0;
+  cursor: pointer;
+  img {
+
+  }
+}
+.fallback-spinner {
+  top: 0;
+  position: absolute;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  background: rgba(255,255,255,0.6);
+}
+
+.logo {
+  width: 12rem;
+  margin: 1rem 0 ;
+}
+
+.userInfo {
+  margin-left: auto;
+}
+.app {
+  padding: 0 2rem;
+}
+
+.btn {
+  background:#529CAE;
+  color: white;
+  text-align: center;
+  cursor: pointer;
+  padding: 0.3rem 1rem;
+  border-radius: 2rem;
+}
+
+.content-wrap {
+  border:1px solid #529CAE;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+
+.modal {
+  position: fixed;
+  top: 0;
+  z-index: 1050;
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  outline: 0;
+  background-color: rgba(255,255,255,0.6);
+  &.center{ 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: auto;
+  }
+  .modal-form {
+    max-width: 100%;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+.loading-back {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  background: rgba(255,255,255,0.6);
+  align-items: center;
+  justify-content: center;
+  display: flex;
+}
+
+.img-table {
+  max-width: 60px;
+}
+
+.header-table {
+  display: flex;
+  margin-bottom: 15px;
+}
+
+.search-input {
+  max-width: 100%;
+  width: 10rem;
+  border: 1px solid #529CAE;
+  border-radius: 12px;
+  display: flex;
+  margin-left: auto;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 10px 0 30px;
+  .wrap-input {
+    border: 0;
+    background-color: transparent;
+    outline: none;
+    flex: 1;
+    max-width: 100%;
+  }
+}
+
+.table {
+  border: 1px solid #529CAE;
+  thead {
+    tr {
+      background-color: #529CAE;
+      color: white;
+      text-transform: uppercase;
+      th {
+        border-top: 0;
+        border-bottom: 0;
+      }
+
+    }
+  }
+  tbody {
+    
+    td{
+      border-top: 0;
+    } 
+  }
+}
+
+
+.ReactTable .rt-thead .rt-th, .ReactTable .rt-thead .rt-td {
+  background-color: #529CAE;
+  color: white;
+  padding: 1rem;
+  font-size: 0.85rem;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.rbc-toolbar {
+  display: flex;
+}
+.rbc-btn-group {
+  flex:1;
+  justify-content: center;
+  display: flex;
+  & > button {
+    color:#338880;
+    font-weight: bold;
+    outline: none;
+    background-color: white;
+  }
+}
+.rbc-toolbar-label {
+  flex:2;
+}
+
+.rbc-header {
+  background-color: #529CAE;
+  padding: 1rem !important;
+  color: white;
+}
+.rbc-toolbar {
+  .header-month{
+    border: 0 ;
+    font-size: 20px;
+    font-weight: bold;
+    color: #529CAE;
+  }
+}
+.rbc-date-cell > a, .rbc-date-cell > a:active, .rbc-date-cell > a:visited {
+  color:#529CAE !important;
+  //font-weight: bold;
+}
+.row-input {
+  display: flex;
+  flex-direction: row;
+  margin: 0rem -1rem;
+}
+
