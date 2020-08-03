@@ -63,7 +63,7 @@ class DataRowsTableSeeder extends Seeder
         $dataRow = $this->dataRow($userDataType, 'username');
         if (!$dataRow->exists) {
             $dataRow->fill([
-                'type'         => 'password',
+                'type'         => 'text',
                 'display_name' => __('seeders.data_rows.username'),
                 'required'     => 1,
                 'browse'       => 0,
@@ -72,6 +72,15 @@ class DataRowsTableSeeder extends Seeder
                 'add'          => 1,
                 'delete'       => 1,
                 'order'        => 4,
+                "details" => json_encode(
+                    [
+                        "validation" => [
+                        "rule" => "unique:tenant.users,username",
+                        "messages"=> [
+                            "unique"=>"Please use an unique username."
+                        ]
+                    ]
+                ]) 
             ])->save();
         }
         $dataRow = $this->dataRow($userDataType, 'password');

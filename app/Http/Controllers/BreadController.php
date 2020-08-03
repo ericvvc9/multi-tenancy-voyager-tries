@@ -618,7 +618,6 @@ class BreadController extends Controller
           $data = $this->insertUpdateData($request, $slug, $dataType->addRows, new $dataType->model_name());
 
         }catch(\RuntimeException  $e) {
-            dd($e);
             if($e->getMessage() !== "Session store not set on request.") {
                 throw $e;
             }
@@ -627,6 +626,7 @@ class BreadController extends Controller
         return([
           'message'    => __('voyager::generic.successfully_added_new')." {$dataType->getTranslatedAttribute('display_name_singular')}",
           'alert-type' => 'success',
+          'data' => $data
         ]);
     }
 

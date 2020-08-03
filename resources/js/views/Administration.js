@@ -289,6 +289,8 @@ export default class Administration extends React.Component {
                     form_data.append(element.field,values[element.field]);
                   } else if ( element.type === 'relationship') {
                     form_data.append(element.details.column, values[element.details.column]);
+                  }else if ( element.type === 'password') {
+                    form_data.append(element.field,values[element.field]);
                   }
                 }
                 if(this.state.addForm) {

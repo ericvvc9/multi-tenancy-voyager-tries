@@ -1005,16 +1005,16 @@
         },
         {
             "name": "ericvvc9/voyager",
-            "version": "v1.4.3",
+            "version": "v1.4.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ericvvc9/voyager.git",
-                "reference": "6acd1f7582580203579a0b95dd4876c12fa47a8f"
+                "reference": "838655961f24ec8dbcf7363702894e4a39cab521"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ericvvc9/voyager/zipball/6acd1f7582580203579a0b95dd4876c12fa47a8f",
-                "reference": "6acd1f7582580203579a0b95dd4876c12fa47a8f",
+                "url": "https://api.github.com/repos/ericvvc9/voyager/zipball/838655961f24ec8dbcf7363702894e4a39cab521",
+                "reference": "838655961f24ec8dbcf7363702894e4a39cab521",
                 "shasum": ""
             },
             "require": {
@@ -1067,7 +1067,7 @@
                 "laravel",
                 "panel"
             ],
-            "time": "2020-08-03T20:04:04+00:00"
+            "time": "2020-08-03T23:13:14+00:00"
         },
         {
             "name": "ericvvc9/voyager-bread-generator",
