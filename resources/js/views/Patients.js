@@ -548,9 +548,14 @@ export default class Patients extends React.Component {
                           :
                           <button className="button mx-1" type="submit">Editar</button>
                       }
-                      <button className="button mx-1" onClick={this.showHistory} type="button">Historia</button>
-                      <button className="button mx-1" onClick={this.showOdontogram} type="button">Odontograma</button>
-                      {/* <button className="button mx-1" onClick={this.delete} type="button">Eliminar</button> */}
+                      
+                      {
+                        !this.state.addForm && <>
+                          <button className="button mx-1" onClick={this.showHistory} type="button">Historia</button>
+                          <button className="button mx-1" onClick={this.showOdontogram} type="button">Odontograma</button>
+                          {/* <button className="button mx-1" onClick={this.delete} type="button">Eliminar</button> */}
+                        </>
+                      }
 
                     </div>
 

@@ -44,30 +44,35 @@ class WrapSelect extends React.Component {
       })
     });
   }
+
+  handleChange = (event) => {
+    this.props.form.setFieldValue(this.props.field.name, event)
+  }
   render() {
     return (
-      <AsyncSelect 
-        cacheOptions 
-        defaultOptions 
-        loadOptions={this.promiseOptions(this.props.slug,this.props.relation)} 
-        //getOptionValue={(option)=>option.id}
-        //getOptionLabel={(option)=>option.text}
-        styles={
-          {
-            option: (provided, state) => ({
-              ...provided,
-              //borderBottom: '1px dotted pink',
-              color: state.isSelected ? 'black' : 'black',
-              //padding: 20,
-            })
+      <FormGroup className="input-wrapper full">
+        <Label className="label-placeholder" for={this.props.name}>{this.props.label ||  this.props.placeholder}</Label>
+        <AsyncSelect 
+          cacheOptions 
+          defaultOptions 
+          loadOptions={this.promiseOptions(this.props.slug,this.props.relation)} 
+          //getOptionValue={(option)=>option.id}
+          //getOptionLabel={(option)=>option.text}
+          styles={
+            {
+              option: (provided, state) => ({
+                ...provided,
+                //borderBottom: '1px dotted pink',
+                color: state.isSelected ? 'black' : 'black',
+                //padding: 20,
+              })
+            }
           }
-        }
-        {...this.props}
-        value={this.state.options.filter(option => {
-          return option.id === this.props.value
-        })}
-        //value={{id: this.props.value}}
-      />
+          onChange={this.handleChange}
+          {...this.props}
+          //value={{id: this.props.value}}
+        />
+      </FormGroup>
     );
   }
 }

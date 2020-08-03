@@ -57,7 +57,8 @@ export default class ClinicHistories extends React.Component {
 
   add = () => {
     this.setState({
-      currentView: 'history'
+      currentView: 'history',
+      addHistory:true,
     })
   }
 
@@ -79,59 +80,68 @@ export default class ClinicHistories extends React.Component {
           }}
           //validationSchema={formSchema}
           enableReinitialize
-          
           onSubmit={(values, actions) => {
-
-            var form_data = new FormData();
-            form_data.append("name", values.name)
-            form_data.append("last_name", values.last_name)
-            form_data.append("document_number", values.document_number)
-            form_data.append("phone_number", values.phone_number)
-            form_data.append("email", values.email)
-            form_data.append("avatar",values.avatar)
-            form_data.append("birthdate", values.birthdate)
-            form_data.append("in_charge_name", values.in_charge_name)
-            //form_data.append("state",values.state)
-            //form_data.append("odontograma",values.odontograma)
-            form_data.append("diseases", JSON.stringify(values.diseases))
-            /* for (let index = 0; index < this.state.createFormFields.length; index++) {
-              const element = this.state.createFormFields[index];
-              if(element.type === 'image' && values[element.field]  instanceof File ) {
-                form_data.append(element.field,new Blob([values[element.field]]),values[element.field].name );
-              } else if(element.type === 'text' ){//typeof values[key] === 'object' ) {
-                form_data.append(element.field,values[element.field]);
-              } else if ( element.type === 'relationship') {
-                form_data.append(element.details.column, values[element.details.column]);
+            if(this.state.currentView === 'history'){ 
+              if (this.state.addHistory) {
+                request
+                  .post(`/api/clinic_histories`, {
+                    date: values.date && values.date[0] ? values.date[0]:'',
+                    consulting_room: values.consulting_room.id,
+                    treatment:values.treatment,
+                    doctor_id:values.doctor_id.id,
+                    patient_id:this.props.initialValues.id,
+                    observations:values.observations,
+                  })
+                  .then(response => {
+                    this.refresh()
+                    this.close()
+                    //
+                  }).catch((er) => {
+                    //actions.setErrors(er.response.data.errors)
+                  })
+              } else {
+                debugger
               }
-            } */
-            if (this.state.addForm) {
-              request
-                .post(`/api/${this.state.createResponse.slug}`, form_data, {
-                  headers: {
-                    'Content-Type': 'multipart/form-data'
-                  }
-                })
-                .then(response => {
-                  this.refresh()
-                  this.close()
-                  //
-                }).catch((er) => {
-                  //actions.setErrors(er.response.data.errors)
-                })
             } else {
-              form_data.append("_method", "PUT")
-              request
-                .post(`/api/${this.state.createResponse.slug}/${this.state.initialValues.id}`,
-                  form_data, {
-                  headers: {
-                    'Content-Type': 'multipart/form-data'
-                  }
-                })
-                .then(response => {
-                  this.refresh()
-                  this.close()
-                }).catch((er) => {
-                })
+              var form_data = new FormData();
+              form_data.append("name", values.name)
+              form_data.append("last_name", values.last_name)
+              form_data.append("document_number", values.document_number)
+              form_data.append("phone_number", values.phone_number)
+              form_data.append("email", values.email)
+              form_data.append("avatar",values.avatar)
+              form_data.append("birthdate", values.birthdate)
+              form_data.append("in_charge_name", values.in_charge_name)
+              form_data.append("diseases", JSON.stringify(values.diseases))
+              if (this.state.addForm) {
+                request
+                  .post(`/api/${this.state.createResponse.slug}`, form_data, {
+                    headers: {
+                      'Content-Type': 'multipart/form-data'
+                    }
+                  })
+                  .then(response => {
+                    this.refresh()
+                    this.close()
+                    //
+                  }).catch((er) => {
+                    //actions.setErrors(er.response.data.errors)
+                  })
+              } else {
+                form_data.append("_method", "PUT")
+                request
+                  .post(`/api/${this.state.createResponse.slug}/${this.state.initialValues.id}`,
+                    form_data, {
+                    headers: {
+                      'Content-Type': 'multipart/form-data'
+                    }
+                  })
+                  .then(response => {
+                    this.refresh()
+                    this.close()
+                  }).catch((er) => {
+                  })
+              }
             }
           }}
         >
@@ -216,7 +226,7 @@ export default class ClinicHistories extends React.Component {
                             },
                             {
                               Header: 'CONSULTORIO',
-                              accessor: 'date', // String-based value accessors!
+                              accessor: 'consulting_room', // String-based value accessors!
                             },
                             {
                               Header: 'DOCTOR',
@@ -252,20 +262,17 @@ export default class ClinicHistories extends React.Component {
                     
                       <InputDateFormik
                         name="date"
-                        disabled
-                        placeholder="Nombre de Paciente"
+                        placeholder="Fecha"
                       />
                       <AsyncSelectFormik
                         name="consulting_room"
                         slug="clinic_histories"
                         relation="clinic_history_belonsto_consulting_room_relationship"
-                        disabled
                         placeholder="Seleccionar Consultorio"
                       />
                       
                       <SelectFormik
                         name="treatment"
-                        disabled
                         options={[{
                           label:"anything",
                           value:'anything'
@@ -276,22 +283,33 @@ export default class ClinicHistories extends React.Component {
                         name="doctor_id"
                         slug="clinic_histories"
                         relation="clinic_history_belonsto_doctor_relationship"
-                        disabled
                         placeholder="Seleccionar Doctor"
                       />
                       <InputTextAreaFormik
                         name="observations"
-                        disabled
                         placeholder="Observaciones"
                       />
-                      <button className="button mx-1" type="submit">Editar</button>
-                      <button 
-                        className="button mx-1" 
-                        type="button"
-                        onClick={this.getBudget}
-                      >
-                        Generar Presupuesto
-                      </button>
+                      <div className="group-buttons">
+                        {/* <button className="button mx-1" type="submit">
+                          Editar
+                        </button> */}
+                        {
+                          this.state.addHistory ?
+                            <button className="button mx-1" type="submit">Generar</button>
+                            :
+                            <>
+                              <button className="button mx-1" type="submit">Editar</button>
+                              <button 
+                                className="button mx-1" 
+                                type="button"
+                                onClick={this.getBudget}
+                              >
+                                Generar Presupuesto
+                              </button>
+                            </>
+                        }
+                        
+                      </div>
 
                     </>
                   }
