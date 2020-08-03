@@ -93,8 +93,9 @@ export default class ClinicHistories extends React.Component {
                     observations:values.observations,
                   })
                   .then(response => {
-                    this.refresh()
-                    this.close()
+                    this.setState({
+                      currentView:'budget'
+                    })
                     //
                   }).catch((er) => {
                     //actions.setErrors(er.response.data.errors)
@@ -102,7 +103,7 @@ export default class ClinicHistories extends React.Component {
               } else {
                 debugger
               }
-            } else {
+            } else if (this.state.currentView === 'budget'){
               var form_data = new FormData();
               form_data.append("name", values.name)
               form_data.append("last_name", values.last_name)
@@ -230,7 +231,7 @@ export default class ClinicHistories extends React.Component {
                             },
                             {
                               Header: 'DOCTOR',
-                              accessor: 'doctor', // String-based value accessors!
+                              accessor: 'doctor_id', // String-based value accessors!
                             },
                             {
                               Header: 'TRATAMIENTO',
