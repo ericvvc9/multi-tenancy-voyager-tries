@@ -201,7 +201,7 @@ class BreadController extends Controller
                                 $model = app($options->model);
                                 $query = $model::where($options->key,$relationshipData->{$options->column})->first();
                                 if(isset($query)){
-                                    $data->{$options->column} = $query->{$options->label};
+                                    $data->{$options->column."_display_name"} = $query->{$options->label};
                                     "<p>{{ $query->{$options->label} }}</p>";
                                 }else{
                                     "<p>{{ __('voyager::generic.no_results') }}</p>";

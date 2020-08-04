@@ -48,6 +48,18 @@ class WrapSelect extends React.Component {
   handleChange = (event) => {
     this.props.form.setFieldValue(this.props.field.name, event)
   }
+
+  getFilter = () => {
+    if(typeof(this.props.field.value) === 'object') {
+      return this.props.field.value
+    } else {
+      return this.state.options.filter((option) => {
+        return this.props.field.value === option.value
+      })
+    }
+    
+  }
+
   render() {
     return (
       <FormGroup className="input-wrapper full">
@@ -69,8 +81,8 @@ class WrapSelect extends React.Component {
             }
           }
           onChange={this.handleChange}
+          value={this.getFilter()}
           {...this.props}
-          //value={{id: this.props.value}}
         />
       </FormGroup>
     );

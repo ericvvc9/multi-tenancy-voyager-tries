@@ -63,6 +63,18 @@
     flex-direction: row;
     > div {
       flex:1;
+      background-color: white;
+      color: #529CAE;
+      padding: 5px 10px;
+      font-weight: bold;
+      &:first-child {
+        border-top-left-radius: 15px;
+        border-bottom-left-radius: 15px;
+      }
+      &:last-child {
+        border-top-right-radius: 15px;
+        border-bottom-right-radius: 15px;
+      }
     }
   }
 }
