@@ -26,6 +26,9 @@ export default class ClinicHistories extends React.Component {
       currentView: 'histories',
       budget: {
         budgetItems: []
+      },
+      history:{
+
       }
     }
 
@@ -321,7 +324,25 @@ export default class ClinicHistories extends React.Component {
                     //validationSchema={formSchema}
                     enableReinitialize
                     onSubmit={(values, actions) => {
-                      debugger
+                      request
+                          .post(`/api/clinic_histories/${this.state.history.id}`, {
+                            date:  typeof(values.date) === 'object' && values.date[0] ? values.date[0] :  values.date,
+                            consulting_room: values.consulting_room.id || values.consulting_room,
+                            treatment: values.treatment,
+                            doctor_id: values.doctor_id.id ||  values.doctor_id,
+                            patient_id: this.props.initialValues.id,
+                            observations: values.observations,
+                          })
+                          .then(response => {
+                            this.setState({
+                              currentView: 'histories'
+                            }, ()=> {
+                              this.refresh();
+                            })
+                            //
+                          }).catch((er) => {
+                            //actions.setErrors(er.response.data.errors)
+                          })
                     }}
                   >
                     {({ errors, touched, values, setFieldValue}) => (
@@ -416,7 +437,10 @@ export default class ClinicHistories extends React.Component {
                                   
                                   <div onClick={() => {
                                     let arr = [...values.budgetItems]
-                                    arr.push({})
+                                    arr.push({
+                                      quantity: 1,
+                                      price: 100,
+                                    })
                                     setFieldValue('budgetItems', arr)
                                   }}>+</div>
                                 </div>

@@ -29,6 +29,8 @@ class VoyagerDummyDatabaseSeeder extends Seeder
         $this->seed('ConsultingRoomTableSeeder');
         $this->seed('AppointmentsTableSeeder');
         $this->seed('ClinicHistoriesTableSeeder');
+        $this->seed('BudgetItemTableSeeder');
+        $this->seed('BudgetTableSeeder');
         $this->seed('PermissionRoleTableSeeder');
         
     }
