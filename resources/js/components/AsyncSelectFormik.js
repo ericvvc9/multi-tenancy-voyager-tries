@@ -66,6 +66,7 @@ class WrapSelect extends React.Component {
         <Label className="label-placeholder" for={this.props.name}>{this.props.label ||  this.props.placeholder}</Label>
         <AsyncSelect 
           cacheOptions 
+          isDisabled={this.props.disabled}
           defaultOptions 
           loadOptions={this.promiseOptions(this.props.slug,this.props.relation)} 
           //getOptionValue={(option)=>option.id}

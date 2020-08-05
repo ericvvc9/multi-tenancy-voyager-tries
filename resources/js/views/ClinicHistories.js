@@ -12,6 +12,7 @@ import InputDateFormik from '../components/InputDateFormik';
 import SelectFormik from '../components/SelectFormik';
 import AsyncSelectFormik from '../components/AsyncSelectFormik';
 import BigNumber from 'bignumber.js';
+import classnames from 'classnames';
 let values = {}
 
 
@@ -84,7 +85,12 @@ export default class ClinicHistories extends React.Component {
       <Modal>
         <>
           <div className="modal-form">
-            <div className="custom-wrapper large">
+            <div className={
+              classnames({
+                "custom-wrapper":true,
+                "large":this.state.currentView === 'histories' 
+                //|| this.state.currentView === 'budget'
+              })}>
               <div className="close-icon" onClick={this.props.onClose}>x</div>
               <Formik
                 initialValues={{
@@ -118,7 +124,10 @@ export default class ClinicHistories extends React.Component {
                             placeholder="Apellido de Paciente"
                           />
                           <InputTextFormik
-                            value={values.birthdate && values.birthdate[0] && moment(values.birthdate[0]).isValid() ? moment().year() - moment(values.birthdate[0]).year() : ""}
+                            value={
+                              typeof(values.birthdate) === 'object' && moment(values.birthdate[0]).isValid() ? moment().year() - moment(values.birthdate[0]).year() : 
+                              moment(values.birthdate).isValid() ? moment().year() - moment(values.birthdate).year() :""
+                            }
                             disabled
                             valueChange
                             placeholder="Edad"
@@ -320,7 +329,9 @@ export default class ClinicHistories extends React.Component {
                 this.state.currentView === 'budget' &&
                 <>
                   <Formik
-                    initialValues={this.state.budget}
+                    initialValues={{
+                      ...this.state.history,
+                      ...this.state.budget}}
                     //validationSchema={formSchema}
                     enableReinitialize
                     onSubmit={(values, actions) => {
@@ -347,36 +358,53 @@ export default class ClinicHistories extends React.Component {
                   >
                     {({ errors, touched, values, setFieldValue}) => (
                       <Form >
-                        
-                        <InputDateFormik
-                          name="date"
-                          placeholder="Fecha"
-                          disabled
-                        />
-                        <AsyncSelectFormik
-                          name="consulting_room"
-                          slug="clinic_histories"
-                          relation="clinic_history_belonsto_consulting_room_relationship"
-                          placeholder="Seleccionar Consultorio"
-                          disabled
-                        />
+                        <div className="mx-2">
 
-                        <SelectFormik
-                          name="treatment"
-                          options={[{
-                            label: "anything",
-                            value: 'anything'
-                          }]}
-                          placeholder="Seleccionar Tratamiento"
-                          disabled
-                        />
-                        <AsyncSelectFormik
-                          name="doctor_id"
-                          slug="clinic_histories"
-                          relation="clinic_history_belonsto_doctor_relationship"
-                          placeholder="Seleccionar Doctor"
-                          disabled
-                        />
+                          <div className="row-input">
+                            <InputDateFormik
+                              name="date"
+                              placeholder="Fecha"
+                              disabled
+                            />
+                            <AsyncSelectFormik
+                              name="consulting_room"
+                              slug="clinic_histories"
+                              relation="clinic_history_belonsto_consulting_room_relationship"
+                              placeholder="Seleccionar Consultorio"
+                              disabled
+                            />
+                          </div>
+                          <div className="row-input">
+                            <SelectFormik
+                              name="treatment"
+                              options={[{
+                                label: "anything",
+                                value: 'anything'
+                              }]}
+                              placeholder="Seleccionar Tratamiento"
+                              disabled
+                            />
+                            <AsyncSelectFormik
+                              name="doctor_id"
+                              slug="clinic_histories"
+                              relation="clinic_history_belonsto_doctor_relationship"
+                              placeholder="Seleccionar Doctor"
+                              disabled
+                            />
+                          </div>
+                          <div className="row-input">
+                            <InputTextFormik
+                              name="code_budget"
+                              placeholder="Codigo Presupuesto"
+                            />
+                            <AsyncSelectFormik
+                              name="agreement"
+                              slug="budget"
+                              relation="budget_belonsto_agreement_relationship"
+                              placeholder="Seleccionar Convenio"
+                            /> 
+                          </div>
+                        </div>
                         {/* 
                           <InputTextFormik
                             name="code_budget"
@@ -409,59 +437,77 @@ export default class ClinicHistories extends React.Component {
                                     values.budgetItems.map((budgetItem, index) => (
                                       <div key={index} className="custom-row">
                                         <div>
-                                          <Field name={`budgetItems.${index}.quantity`} />
+                                          <Field className="table-input-text" name={`budgetItems.${index}.quantity`} />
                                           {/* <input 
                                             type="numeric"
                                             className="custom-input-table" 
                                           /> */}
                                         </div>
                                         <div>
-                                          <Field name={`budgetItems.${index}.detail`} />
+                                          <Field className="table-input-text" name={`budgetItems.${index}.detail`} />
                                           {/* <input className="custom-input-table" /> */}
                                         </div>
                                         <div>
                                           {/* <input className="custom-input-table" /> */}
-                                          <Field name={`budgetItems.${index}.price`} />
-                                          <button
-                                            type="button"
-                                            onClick={() => arrayHelpers.remove(index)} // remove a friend from the list
-                                          >
-                                            -
-                                          </button>
+                                          <div  className="row-custom">
+                                            <Field className="table-input-text" name={`budgetItems.${index}.price`} />
+                                            <button
+                                              type="button"
+                                              onClick={() => arrayHelpers.remove(index)} // remove a friend from the list
+                                            >
+                                              -
+                                            </button>
+                                          </div>
                                         </div>
                                       </div>
                                     ))
                                   ) : (
                                     null
                                   )}
-                                  
-                                  <div onClick={() => {
-                                    let arr = [...values.budgetItems]
-                                    arr.push({
-                                      quantity: 1,
-                                      price: 100,
-                                    })
-                                    setFieldValue('budgetItems', arr)
-                                  }}>+</div>
                                 </div>
                               )}
                             />
                           </div>
                         </div>
-                        <InputTextFormik
-                          valueChange
-                          value={
-                            values.budgetItems.reduce((prev,current) => {
-                              let p = new BigNumber(current.price)
-                              let q = new BigNumber(current.quantity)
-                              return prev.plus(p.multipliedBy(q))
-                            },new BigNumber(0)).toFormat() 
-                          }
-                          placeholder="Total"
-                        />
-                        <div>
+                        <div className="button-add-wrap">
+                          <div onClick={() => {
+                            let arr = [...values.budgetItems]
+                            arr.push({
+                              quantity: 1,
+                              price: 100,
+                            })
+                            setFieldValue('budgetItems', arr)
+                          }}
+                            className="button-add"
+                          
+                          >+</div>
+                        </div>
+                        <div className="wrap-amount">
+                          <div className="content-amount">
+                            <InputTextFormik
+                              valueChange
+                              value={
+                                values.budgetItems.reduce((prev,current) => {
+                                  let p = new BigNumber(current.price)
+                                  let q = new BigNumber(current.quantity)
+                                  return prev.plus(p.multipliedBy(q))
+                                },new BigNumber(0)).toFormat() 
+                              }
+                              placeholder="Total"
+                            />
+                          </div>
+                        </div>
+                        <div className="row-input">
                           <InputTextFormik
-                            name="total"
+                            valueChange
+                            disabled
+                            value={
+                              values.budgetItems.reduce((prev,current) => {
+                                let p = new BigNumber(current.price)
+                                let q = new BigNumber(current.quantity)
+                                return prev.plus(p.multipliedBy(q))
+                              },new BigNumber(0)).toFormat() 
+                            }
                             placeholder="Total"
                           />
                           <InputTextFormik
@@ -469,23 +515,30 @@ export default class ClinicHistories extends React.Component {
                             placeholder="A cuenta"
                           />
                           <InputTextFormik
-                            name="balance"
+                            valueChange
+                            value={
+                              values.budgetItems.reduce((prev,current) => {
+                                let p = new BigNumber(current.price)
+                                let q = new BigNumber(current.quantity)
+                                return prev.plus(p.multipliedBy(q))
+                              },new BigNumber(0)).minus(new BigNumber(values.partial_payment)).toFormat() 
+                            }
                             placeholder="Saldo"
                           />
-                          <button
-                            className="button mx-1"
-                            type="submit"
-                          >
-                            Guardar
-                          </button>
-                          <button
-                            className="button mx-1"
-                            type="button"
-                            onClick={this.print}
-                          >
-                            Imprimir
-                        </button>
                         </div>
+                        <button
+                          className="button mx-1"
+                          type="submit"
+                        >
+                          Guardar
+                        </button>
+                        <button
+                          className="button mx-1"
+                          type="button"
+                          onClick={this.print}
+                        >
+                          Imprimir
+                        </button>
                       </Form>
                     )}
                   </Formik>
