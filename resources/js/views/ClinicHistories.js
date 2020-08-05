@@ -105,7 +105,7 @@ export default class ClinicHistories extends React.Component {
                       Historia Clinica
                     </div>
                     <div className="row-input custom-wrap-patient">
-                      <div>
+                      <div className="mx-2">
                         <InputEasyImageFormik
                           name="avatar"
                           disabled
