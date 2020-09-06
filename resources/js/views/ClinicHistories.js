@@ -13,6 +13,8 @@ import SelectFormik from '../components/SelectFormik';
 import AsyncSelectFormik from '../components/AsyncSelectFormik';
 import BigNumber from 'bignumber.js';
 import classnames from 'classnames';
+import treatments from '../assets/data/treatments.json';
+
 let values = {}
 
 
@@ -71,10 +73,15 @@ export default class ClinicHistories extends React.Component {
   }
 
   refresh = () => {
-
+    this.getClinicHistory()
   }
   export = () => {
 
+  }
+
+  goToBudget = () => {
+    console.log(this.state)
+    debugger
   }
 
   print = () => {
@@ -200,7 +207,7 @@ export default class ClinicHistories extends React.Component {
                         },
                         {
                           Header: 'PRESUPUESTO',
-                          accessor: 'doctor_display_name', // String-based value accessors!
+                          accessor: 'clinic_history_hasone_budget_relationship.balance', // String-based value accessors!
                         },
                         {
                           Header: 'OBS',
@@ -238,7 +245,8 @@ export default class ClinicHistories extends React.Component {
                           })
                           .then(response => {
                             this.setState({
-                              currentView: 'budget'
+                              currentView: 'budget',
+                              history: response.data
                             })
                             //
                           }).catch((er) => {
@@ -282,10 +290,7 @@ export default class ClinicHistories extends React.Component {
 
                         <SelectFormik
                           name="treatment"
-                          options={[{
-                            label: "anything",
-                            value: 'anything'
-                          }]}
+                          options={treatments}
                           placeholder="Seleccionar Tratamiento"
                         />
                         <AsyncSelectFormik
@@ -308,13 +313,24 @@ export default class ClinicHistories extends React.Component {
                               :
                               <>
                                 <button className="button mx-1" type="submit">Editar</button>
-                                <button
-                                  className="button mx-1"
-                                  type="button"
-                                  onClick={this.getBudget}
-                                >
-                                  Generar Presupuesto
-                              </button>
+                                {
+                                  typeof this.state.history.clinic_history_hasone_budget_relationship !== 'undefined' ?
+                                  <button
+                                    className="button mx-1"
+                                    type="button"
+                                    onClick={this.getBudget}
+                                  >
+                                    Ir a Presupuesto
+                                  </button>
+                                  :
+                                  <button
+                                    className="button mx-1"
+                                    type="button"
+                                    onClick={this.getBudget}
+                                  >
+                                    Generar Presupuesto
+                                  </button>
+                                }
                               </>
                           }
 
@@ -329,31 +345,59 @@ export default class ClinicHistories extends React.Component {
                 this.state.currentView === 'budget' &&
                 <>
                   <Formik
-                    initialValues={{
+                    initialValues={
+                      this.state.history.clinic_history_hasone_budget_relationship ?
+                      {
+                        ...this.state.history,
+                        ...this.state.history.clinic_history_hasone_budget_relationship,
+                        budgetItems: this.state.history.clinic_history_hasone_budget_relationship.budget_items.map((budgetItem) => {
+                          return {
+                            ...budgetItem
+                          }
+                        }),
+                        date:this.state.history.date
+                      }
+                      :
+                      {
                       ...this.state.history,
-                      ...this.state.budget}}
+                      }
+                    }
                     //validationSchema={formSchema}
                     enableReinitialize
                     onSubmit={(values, actions) => {
                       request
-                          .post(`/api/clinic_histories/${this.state.history.id}`, {
-                            date:  typeof(values.date) === 'object' && values.date[0] ? values.date[0] :  values.date,
-                            consulting_room: values.consulting_room.id || values.consulting_room,
-                            treatment: values.treatment,
-                            doctor_id: values.doctor_id.id ||  values.doctor_id,
-                            patient_id: this.props.initialValues.id,
-                            observations: values.observations,
+                        .post(`/api/budget`, {
+                          clinic_history:this.state.history.id,
+                          agreement:values.agreement.id,
+                          code_budget:values.code_budget,
+                          total:values.budgetItems.reduce((prev,current) => {
+                            let p = new BigNumber(current.price)
+                            let q = new BigNumber(current.quantity)
+                            return prev.plus(p.multipliedBy(q))
+                          },new BigNumber(0)).toFormat(),
+                          balance:values.budgetItems.reduce((prev,current) => {
+                            let p = new BigNumber(current.price)
+                            let q = new BigNumber(current.quantity)
+                            return prev.plus(p.multipliedBy(q))
+                          },new BigNumber(0)).minus(new BigNumber(values.partial_payment)).toFormat() ,
+                          partial_payment:values.partial_payment,
+                          budgetItems: values.budgetItems.map((budgetItem) => {
+                            return {
+                              ...budgetItem,
+                              detail: budgetItem.detail_treatment
+                            }
+                          }) 
+                        })
+                        .then(response => {
+                          this.setState({
+                            currentView: 'histories'
+                          }, ()=> {
+                            this.refresh();
                           })
-                          .then(response => {
-                            this.setState({
-                              currentView: 'histories'
-                            }, ()=> {
-                              this.refresh();
-                            })
-                            //
-                          }).catch((er) => {
-                            //actions.setErrors(er.response.data.errors)
-                          })
+                          //
+                        }).catch((er) => {
+                          //actions.setErrors(er.response.data.errors)
+                        })
                     }}
                   >
                     {({ errors, touched, values, setFieldValue}) => (

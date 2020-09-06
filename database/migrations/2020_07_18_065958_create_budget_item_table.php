@@ -17,8 +17,8 @@ class CreateBudgetItemTable extends Migration
             $table->bigIncrements('id');
             $table->integer('budget');
             $table->integer('quantity');
-            $table->integer('detail_treatment');
-            $table->integer('price');
+            $table->text('detail_treatment');
+            $table->float('price');
             
             $table->timestamps();
         });

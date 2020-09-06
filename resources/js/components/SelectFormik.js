@@ -32,7 +32,9 @@ class WrapSelect extends React.Component {
   }
 
   render() {
-    return <FormGroup className="input-wrapper full">
+    return <FormGroup className="input-wrapper full" style={{
+      color: 'black'
+    }}>
       <Label className="label-placeholder"  for={this.props.name}>{this.props.label ||  this.props.placeholder}</Label>
       <Select
         className="React"

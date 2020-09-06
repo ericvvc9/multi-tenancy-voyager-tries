@@ -27,7 +27,7 @@ class BudgetTableSeeder extends Seeder
                 'icon'                  => 'voyager-news',
                 'model_name'            => 'App\\Budget',
                 'policy_name'           => '',
-                'controller'            => '',
+                'controller'            => 'App\\Http\\Controllers\\BudgetController',
                 'generate_permissions'  => 1,
                 'description'           => '',
                 'server_side'           => 1

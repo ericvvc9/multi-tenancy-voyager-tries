@@ -15,5 +15,17 @@ class ClinicHistories extends Model
     protected $table = 'clinic_histories';
 
     protected $fillable = [ 'name'];
-
+    /* function getBudgetAttribute (){
+        if($this->budget()->first()){
+            $b = $this->budget()->first();
+            $b->budgetItems;
+            return json_encode($b);
+            //$this->budget()->first()->budgetItems;
+        }
+        return "";
+    }
+    
+    function budget() {
+        return $this->hasOne('App\Budget','clinic_history');
+    } */
 }

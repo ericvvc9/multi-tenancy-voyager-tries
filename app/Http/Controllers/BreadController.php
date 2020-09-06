@@ -32,6 +32,9 @@ class BreadController extends Controller
   
   public function getSlug(Request $request)
   {
+    if($request->headers->get('accept') !== 'application/json, text/plain, */*'){
+        return parent::index($request);
+    }
       if (isset($this->slug)) {
           $slug = $this->slug;
       } else {
@@ -43,6 +46,9 @@ class BreadController extends Controller
 
   public function index(Request $request)
   {
+    if($request->headers->get('accept') !== 'application/json, text/plain, */*'){
+      return parent::index($request);
+    }
     /* dd($request->route()->getName());
       // GET THE SLUG, ex. 'posts', 'pages', etc.
       */
@@ -188,7 +194,6 @@ class BreadController extends Controller
                 if (isset($row->details->view)) {
                 //continue;
                 } else if($row->type == 'relationship') {
-                    
                     if(isset($options->model) && isset($options->type)) {
                         if(class_exists($options->model)){
                         $relationshipField = $row->field;
@@ -238,8 +243,12 @@ class BreadController extends Controller
                 
                 
                             if(isset($query)){
+                                $label = $query->{$options->label};
+                                $data->{$row->field} = $label;
+
                                 //<p>{{ $query->{$options->label} }}</p>;
                             }else{
+                                //$query->{$options->label} = __('voyager::generic.no_results');
                                 //<p>{{ __('voyager::generic.no_results') }}</p>
                             }
                         }else if ($options->type == 'hasMany') {
@@ -351,23 +360,18 @@ class BreadController extends Controller
                             }
                         }
                 
-                    }else {
-                        //dd(cannot make relationship because {{ $options->model }} does not exist.)
-                    }
-                } 
-           
-                   
-           
-              }
-       }
-       
-
-       }
+                        }else {
+                            //dd(cannot make relationship because {{ $options->model }} does not exist.)
+                        }
+                    } 
+                }
+            }
+        }
 
 
 
 
-       return $dataTypeContent;
+        return $dataTypeContent;
     }
 
     //***************************************
@@ -386,6 +390,9 @@ class BreadController extends Controller
     {
         $slug = $this->getSlug($request);
 
+        if($request->headers->get('accept') !== 'application/json, text/plain, */*'){
+            return parent::show($request, $id);
+        }
         $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
 
         $isSoftDeleted = false;
@@ -451,6 +458,9 @@ class BreadController extends Controller
     {
         $slug = $this->getSlug($request);
 
+        if($request->headers->get('accept') !== 'application/json, text/plain, */*'){
+            return parent::edit($request, $id);
+        }
         $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
 
         if (strlen($dataType->model_name) != 0) {
@@ -500,6 +510,9 @@ class BreadController extends Controller
     {
         $slug = $this->getSlug($request);
 
+        if($request->headers->get('accept') !== 'application/json, text/plain, */*'){
+            return parent::update($request, $id);
+        }
         $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
 
         // Compatibility with Model binding.
@@ -559,6 +572,9 @@ class BreadController extends Controller
     {
         $slug = $this->getSlug($request);
 
+        if($request->headers->get('accept') !== 'application/json, text/plain, */*'){
+            return parent::create($request);
+        }
         $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
 
         // Check permission
@@ -606,6 +622,9 @@ class BreadController extends Controller
     {
         $slug = $this->getSlug($request);
 
+        if($request->headers->get('accept') !== 'application/json, text/plain, */*'){
+            return parent::store($request);
+        }
         $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
 
         // Check permission
@@ -646,6 +665,9 @@ class BreadController extends Controller
     {
         $slug = $this->getSlug($request);
 
+        if($request->headers->get('accept') !== 'application/json, text/plain, */*'){
+            return parent::destroy($request, $id);
+        }
         $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
 
         // Check permission
@@ -694,6 +716,9 @@ class BreadController extends Controller
     {
         $slug = $this->getSlug($request);
 
+        if($request->headers->get('accept') !== 'application/json, text/plain, */*'){
+            return parent::restore($request, $id);
+        }
         $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
 
         // Check permission
@@ -816,6 +841,9 @@ class BreadController extends Controller
     {
         $slug = $this->getSlug($request);
 
+        if($request->headers->get('accept') !== 'application/json, text/plain, */*'){
+            return parent::order($request);
+        }
         $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
 
         // Check permission
@@ -858,6 +886,9 @@ class BreadController extends Controller
     {
         $slug = $this->getSlug($request);
 
+        if($request->headers->get('accept') !== 'application/json, text/plain, */*'){
+            return parent::update_order($request);
+        }
         $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
 
         // Check permission
@@ -881,6 +912,10 @@ class BreadController extends Controller
     public function action(Request $request)
     {
         $slug = $this->getSlug($request);
+        
+        if($request->headers->get('accept') !== 'application/json, text/plain, */*'){
+            return parent::action($request);
+        }
         $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
 
         $action = new $request->action($dataType, null);
@@ -899,6 +934,9 @@ class BreadController extends Controller
     public function relation(Request $request)
     {
         $slug = $this->getSlug($request);
+        if($request->headers->get('accept') !== 'application/json, text/plain, */*'){
+            return parent::relation($request);
+        }
         $page = $request->input('page');
         $on_page = 50;
         $search = $request->input('search', false);

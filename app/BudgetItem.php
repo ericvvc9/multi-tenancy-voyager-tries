@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use TCG\Voyager\Facades\Voyager;
 use TCG\Voyager\Traits\Translatable;
 
-class ClinicHistories extends Model
+class BudgetItem extends Model
 {
     //use Translatable;
 
@@ -14,6 +14,6 @@ class ClinicHistories extends Model
 
     protected $table = 'budget_item';
 
-    protected $fillable = [ 'name'];
+    protected $fillable = [ 'quantity', 'price'];
 
 }

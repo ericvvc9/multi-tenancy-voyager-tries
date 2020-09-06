@@ -140,7 +140,7 @@ class ClinicHistoriesTableSeeder extends Seeder
             $dataRow->fill([
               'type'         => 'relationship',
               'display_name' => __('seeders.data_rows.doctor'),
-              'required'     => 0,
+              'required'     => 1,
               'browse'       => 1,
               'read'         => 1,
               'edit'         => 1,
@@ -197,6 +197,33 @@ class ClinicHistoriesTableSeeder extends Seeder
                   'pivot'       => 0,
               ],
               'order'        => 10,
+            ])->save();
+        }
+        
+        
+
+        $dataRow = $this->dataRow($dataType, 'clinic_history_hasone_budget_relationship');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+              'type'         => 'relationship',
+              'display_name' => __('seeders.data_rows.budget'),
+              'required'     => 0,
+              'browse'       => 1,
+              'read'         => 1,
+              'edit'         => 1,
+              'add'          => 1,
+              'delete'       => 1,
+              'details'      => [
+                  'model'       => 'App\\Budget',
+                  'table'       => 'budget',
+                  'type'        => 'hasOne',
+                  'column'      => 'clinic_history',
+                  'key'         => 'id',
+                  'label'       => 'json',
+                  'pivot_table' => 'agreements',
+                  'pivot'       => 0,
+              ],
+              'order'        => 11,
             ])->save();
         }
         $dataRow = $this->dataRow($dataType, 'treatment');
