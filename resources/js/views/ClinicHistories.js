@@ -1,6 +1,6 @@
 import React from 'react';
 import q from 'query-string'
-import { request } from '../utils';
+import { request,Utility } from '../utils';
 import ReactTable from 'react-table'
 import InputTextFormik from '../components/InputTextFormik';
 import InputEasyImageFormik from '../components/InputEasyImageFormik';
@@ -161,7 +161,9 @@ export default class ClinicHistories extends React.Component {
               {
                 this.state.currentView === 'histories' &&
                 <>
-                  <div>
+                  <div style={{
+                    position: 'relative'
+                  }}>
                     <ReactTable
                       getTdProps={(state, rowInfo, column, instance) => {
                         return {
@@ -215,8 +217,14 @@ export default class ClinicHistories extends React.Component {
                         },
                       ]}
                     />
+                    <button
+                      style={{
+                        position: 'absolute',
+                        bottom: 37,
+                        right: 13
+                      }}
+                       className="button mx-1" type="button" onClick={this.add}>+</button>
                   </div>
-                  <button className="button mx-1" type="button" onClick={this.add}>+</button>
                   <div className="group-buttons">
                     <button className="button mx-1" type="button" onClick={this.refresh}>Actualizar</button>
                     <button className="button mx-1" type="button" onClick={this.export} type="button">Exportar</button>
@@ -354,40 +362,52 @@ export default class ClinicHistories extends React.Component {
                           return {
                             ...budgetItem
                           }
-                        }),
+                        }) ,
                         date:this.state.history.date
                       }
                       :
                       {
-                      ...this.state.history,
+                        budgetItems:[],
+                        ...this.state.history,
                       }
                     }
                     //validationSchema={formSchema}
                     enableReinitialize
                     onSubmit={(values, actions) => {
+                      let path = '/api/budget';
+                      let isEdition = false;
+                      if(
+                        this.state.history && 
+                        this.state.history.clinic_history_hasone_budget_relationship.id
+                      ){
+                        isEdition = true;
+                        path =`/api/budget/${this.state.history.clinic_history_hasone_budget_relationship.id}`
+                      }
+                      let data = {
+                        clinic_history:this.state.history.id,
+                        agreement:values.agreement ? values.agreement.id: "", 
+                        code_budget:values.code_budget,
+                        total:values.budgetItems.reduce((prev,current) => {
+                          let p = new BigNumber(current.price)
+                          let q = new BigNumber(current.quantity)
+                          return prev.plus(p.multipliedBy(q))
+                        },new BigNumber(0)).toFormat(),
+                        balance:values.budgetItems.reduce((prev,current) => {
+                          let p = new BigNumber(current.price)
+                          let q = new BigNumber(current.quantity)
+                          return prev.plus(p.multipliedBy(q))
+                        },new BigNumber(0)).minus(new BigNumber(values.partial_payment)).toFormat() ,
+                        partial_payment:values.partial_payment,
+                        budgetItems: values.budgetItems.map((budgetItem) => {
+                          return {
+                            ...budgetItem,
+                          }
+                        }),
+                        ...(isEdition ? {_method:"PUT"}:{})
+                      }
+                      let form_data = Utility.convertModelToFormData(data);
                       request
-                        .post(`/api/budget`, {
-                          clinic_history:this.state.history.id,
-                          agreement:values.agreement.id,
-                          code_budget:values.code_budget,
-                          total:values.budgetItems.reduce((prev,current) => {
-                            let p = new BigNumber(current.price)
-                            let q = new BigNumber(current.quantity)
-                            return prev.plus(p.multipliedBy(q))
-                          },new BigNumber(0)).toFormat(),
-                          balance:values.budgetItems.reduce((prev,current) => {
-                            let p = new BigNumber(current.price)
-                            let q = new BigNumber(current.quantity)
-                            return prev.plus(p.multipliedBy(q))
-                          },new BigNumber(0)).minus(new BigNumber(values.partial_payment)).toFormat() ,
-                          partial_payment:values.partial_payment,
-                          budgetItems: values.budgetItems.map((budgetItem) => {
-                            return {
-                              ...budgetItem,
-                              detail: budgetItem.detail_treatment
-                            }
-                          }) 
-                        })
+                        .post(path, form_data)
                         .then(response => {
                           this.setState({
                             currentView: 'histories'
@@ -421,10 +441,7 @@ export default class ClinicHistories extends React.Component {
                           <div className="row-input">
                             <SelectFormik
                               name="treatment"
-                              options={[{
-                                label: "anything",
-                                value: 'anything'
-                              }]}
+                              options={treatments}
                               placeholder="Seleccionar Tratamiento"
                               disabled
                             />
@@ -488,7 +505,7 @@ export default class ClinicHistories extends React.Component {
                                           /> */}
                                         </div>
                                         <div>
-                                          <Field className="table-input-text" name={`budgetItems.${index}.detail`} />
+                                          <Field className="table-input-text" name={`budgetItems.${index}.detail_treatment`} />
                                           {/* <input className="custom-input-table" /> */}
                                         </div>
                                         <div>

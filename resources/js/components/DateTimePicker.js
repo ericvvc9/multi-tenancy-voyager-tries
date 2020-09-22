@@ -10,6 +10,8 @@ export default class DateTimePicker extends React.Component {
     if (this.props.form) {
       meta = this.props.form.getFieldMeta(field.name); // <-- the workaround.
     }
+    console.log(field.value)
+    console.log("field.value")
     return(
       <div className="input-wrapper" >
         <div>{this.props.placeholder}</div>

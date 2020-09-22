@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use TCG\Voyager\Facades\Voyager;
 use TCG\Voyager\Traits\Translatable;
 
-class Patients extends Model
+class Patient extends Model
 {
     // use Translatable;
 
@@ -26,11 +26,15 @@ class Patients extends Model
 
     public function getDiseasesAttribute($value)
     {
+        if(isInsideAdmin()) {
+            return $value;
+        }
         return json_decode($value) === null ? ((object)null):collect(json_decode($value));
     }
+    /* 
     public function getOdontogramaAttribute($value)
     {
         return collect(json_decode($value));
-    }
+    } */
 
 }

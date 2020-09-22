@@ -14,6 +14,6 @@ class BudgetItem extends Model
 
     protected $table = 'budget_item';
 
-    protected $fillable = [ 'quantity', 'price'];
+    protected $fillable = [ 'quantity', 'price','detail_treatment'];
 
 }

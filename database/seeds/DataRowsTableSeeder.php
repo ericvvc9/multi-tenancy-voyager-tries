@@ -44,6 +44,35 @@ class DataRowsTableSeeder extends Seeder
                 'order'        => 2,
             ])->save();
         }
+        $dataRow = $this->dataRow($userDataType, 'last_name');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'text',
+                'display_name' => 'Apellidos',
+                'required'     => 0,
+                'browse'       => 0,
+                'read'         => 1,
+                'edit'         => 1,
+                'add'          => 1,
+                'delete'       => 1,
+                'order'        => 3,
+            ])->save();
+        }
+
+        $dataRow = $this->dataRow($userDataType, 'document_number');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'text',
+                'display_name' => 'Numero de Documento',
+                'required'     => 0,
+                'browse'       => 0,
+                'read'         => 1,
+                'edit'         => 1,
+                'add'          => 1,
+                'delete'       => 1,
+                'order'        => 4,
+            ])->save();
+        }
 
         $dataRow = $this->dataRow($userDataType, 'email');
         if (!$dataRow->exists) {
@@ -56,7 +85,7 @@ class DataRowsTableSeeder extends Seeder
                 'edit'         => 1,
                 'add'          => 1,
                 'delete'       => 1,
-                'order'        => 3,
+                'order'        => 5,
             ])->save();
         }
         
@@ -71,7 +100,7 @@ class DataRowsTableSeeder extends Seeder
                 'edit'         => 1,
                 'add'          => 1,
                 'delete'       => 1,
-                'order'        => 4,
+                'order'        => 6,
                 "details" => json_encode(
                     [
                         "validation" => [
@@ -94,10 +123,23 @@ class DataRowsTableSeeder extends Seeder
                 'edit'         => 1,
                 'add'          => 1,
                 'delete'       => 0,
-                'order'        => 4,
+                'order'        => 7,
             ])->save();
         }
-
+        $dataRow = $this->dataRow($userDataType, 'phone_number');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'text',
+                'display_name' => 'Telefono',
+                'required'     => 0,
+                'browse'       => 0,
+                'read'         => 1,
+                'edit'         => 1,
+                'add'          => 1,
+                'delete'       => 1,
+                'order'        => 7,
+            ])->save();
+        }
         $dataRow = $this->dataRow($userDataType, 'remember_token');
         if (!$dataRow->exists) {
             $dataRow->fill([
@@ -109,7 +151,7 @@ class DataRowsTableSeeder extends Seeder
                 'edit'         => 0,
                 'add'          => 0,
                 'delete'       => 0,
-                'order'        => 5,
+                'order'        => 8,
             ])->save();
         }
 
@@ -124,7 +166,7 @@ class DataRowsTableSeeder extends Seeder
                 'edit'         => 0,
                 'add'          => 0,
                 'delete'       => 0,
-                'order'        => 6,
+                'order'        => 9,
             ])->save();
         }
 
@@ -139,7 +181,7 @@ class DataRowsTableSeeder extends Seeder
                 'edit'         => 0,
                 'add'          => 0,
                 'delete'       => 0,
-                'order'        => 7,
+                'order'        => 10,
             ])->save();
         }
 
@@ -147,7 +189,7 @@ class DataRowsTableSeeder extends Seeder
         if (!$dataRow->exists) {
             $dataRow->fill([
                 'type'         => 'image',
-                'display_name' => __('voyager::seeders.data_rows.avatar'),
+                'display_name' => "Imagen",
                 'required'     => 0,
                 'browse'       => 1,
                 'read'         => 1,
@@ -215,65 +257,22 @@ class DataRowsTableSeeder extends Seeder
                 'type'         => 'text',
                 'display_name' => 'Locale',
                 'required'     => 0,
-                'browse'       => 1,
-                'read'         => 1,
-                'edit'         => 1,
-                'add'          => 1,
+                'browse'       => 0,
+                'read'         => 0,
+                'edit'         => 0,
+                'add'          => 0,
                 'delete'       => 0,
                 'order'        => 12,
             ])->save();
         }
         
-        $dataRow = $this->dataRow($userDataType, 'last_name');
-        if (!$dataRow->exists) {
-            $dataRow->fill([
-                'type'         => 'text',
-                'display_name' => 'Last Name',
-                'required'     => 0,
-                'browse'       => 0,
-                'read'         => 1,
-                'edit'         => 1,
-                'add'          => 1,
-                'delete'       => 1,
-                'order'        => 12,
-            ])->save();
-        }
-
-        $dataRow = $this->dataRow($userDataType, 'document_number');
-        if (!$dataRow->exists) {
-            $dataRow->fill([
-                'type'         => 'text',
-                'display_name' => 'Document Number',
-                'required'     => 0,
-                'browse'       => 0,
-                'read'         => 1,
-                'edit'         => 1,
-                'add'          => 1,
-                'delete'       => 1,
-                'order'        => 12,
-            ])->save();
-        }
-
-        $dataRow = $this->dataRow($userDataType, 'phone_number');
-        if (!$dataRow->exists) {
-            $dataRow->fill([
-                'type'         => 'text',
-                'display_name' => 'Phone Number',
-                'required'     => 0,
-                'browse'       => 0,
-                'read'         => 1,
-                'edit'         => 1,
-                'add'          => 1,
-                'delete'       => 1,
-                'order'        => 12,
-            ])->save();
-        }
+        
 
         $dataRow = $this->dataRow($userDataType, 'specialities');
         if (!$dataRow->exists) {
             $dataRow->fill([
                 'type'         => 'text',
-                'display_name' => 'Speciality',
+                'display_name' => 'Especialidad',
                 'required'     => 0,
                 'browse'       => 0,
                 'read'         => 1,

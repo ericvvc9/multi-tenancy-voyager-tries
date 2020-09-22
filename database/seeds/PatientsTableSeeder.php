@@ -23,8 +23,8 @@ class PatientsTableSeeder extends Seeder
                 'display_name_singular' => __('seeders.data_types.patients.singular'),
                 'display_name_plural'   => __('seeders.data_types.patients.plural'),
                 'icon'                  => 'voyager-news',
-                'model_name'            => 'App\\Patients',
-                'policy_name'           => 'TCG\\Voyager\\Policies\\PostPolicy',
+                'model_name'            => 'App\\Patient',
+                'policy_name'           => '',
                 'controller'            => '',
                 'generate_permissions'  => 1,
                 'description'           => '',
@@ -107,8 +107,6 @@ class PatientsTableSeeder extends Seeder
                 'delete'       => 1,
                 'order'        => 4,
                 'details'      => [
-                    'slugify' => [
-                    ],
                     'validation' => [
                         'rule'  => 'unique:patients,document_number',
                     ],

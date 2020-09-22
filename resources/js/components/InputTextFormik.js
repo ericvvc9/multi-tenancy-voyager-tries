@@ -18,11 +18,13 @@ class TextInput extends React.Component {
               "is-invalid": this.props.field.meta && this.props.field.meta.error
             })
           }
+          disabled={this.props.disabled}
           placeholder={this.props.placeholder}
         />
         :
         <input 
           value={this.props.value}
+          disabled={this.props.disabled}
           autoComplete="off"
           className={
             classnames({

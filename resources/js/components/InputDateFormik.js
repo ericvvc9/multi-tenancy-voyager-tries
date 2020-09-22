@@ -27,11 +27,10 @@ class DateInput extends React.Component {
             "is-invalid": this.props.field.meta && this.props.field.meta.error
           })
         }
+        disabled={this.props.disabled}
         //data-enable-time
         value={this.props.field.value}
-        options={{
-          defaultDate: moment().subtract(18,'year').toDate()
-        }}
+        options={this.props.options}
         onChange={date => {
           this.props.form.setFieldValue(this.props.field.name, date)
           //this.setState({ date });

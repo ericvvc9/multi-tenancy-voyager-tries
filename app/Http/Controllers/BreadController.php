@@ -205,6 +205,17 @@ class BreadController extends Controller
                                 $relationshipData = (isset($data)) ? $data : $dataTypeContent;
                                 $model = app($options->model);
                                 $query = $model::where($options->key,$relationshipData->{$options->column})->first();
+                                
+                    /* dump($options->column);
+                    dump($relationshipData);
+                    dump($relationshipData->{$options->column});
+                    dump($model);
+                    dump($query);
+                    dump($options->model);
+                    dump($options->type);
+                    dump($row->field);
+                    dump(class_exists($options->model)); */
+
                                 if(isset($query)){
                                     $data->{$options->column."_display_name"} = $query->{$options->label};
                                     "<p>{{ $query->{$options->label} }}</p>";

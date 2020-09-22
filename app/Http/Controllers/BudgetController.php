@@ -10,7 +10,6 @@ class BudgetController extends BreadController
     // POST BR(E)AD
     public function update(Request $request, $id)
     {
-      
         if($request->headers->get('accept') !== 'application/json, text/plain, */*'){
             return parent::relation($request);
         }
@@ -27,9 +26,15 @@ class BudgetController extends BreadController
 
         $data = call_user_func([$dataType->model_name, 'findOrFail'], $id);
         $this->insertUpdateData($request, $slug, $dataType->editRows, $data);
+        
+        $data->budgetItems()->delete();
+        $data->budgetItems()->createMany($request->input('budgetItems', []));
 
-        $data->permissions()->sync($request->input('permissions', []));
-
+        return [
+            'message'    => __('voyager::generic.successfully_added_new')." {$dataType->getTranslatedAttribute('display_name_singular')}",
+            'alert-type' => 'success',
+            'data' => $data
+          ];
         return redirect()
             ->route("voyager.{$dataType->slug}.index")
             ->with([

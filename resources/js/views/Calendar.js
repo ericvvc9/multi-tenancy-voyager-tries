@@ -103,7 +103,8 @@ export default class Calendar extends React.Component{
       this.setState({
         events: events.map((event) => {
           return {
-            title: event.reason,
+            title: `${moment(event.start_date).format("HH:mm")} ${event.patient_id_display_name} ${event.reason}`,
+            // Hora minutos y el nombre
             start: moment(event.start_date).toDate(),
             end: moment(event.start_date).clone().add(1,'hour').toDate(),
             //allDay?: boolean
@@ -187,7 +188,22 @@ export default class Calendar extends React.Component{
         }}
         elementProps={{d:2}}
         views={['month', 'week', 'day']}
-
+        
+        formats={ {
+          //timeGutterFormat: 'HH:mm',
+          /* agendaTimeFormat:'HH:ss',
+          agendaHeaderFormat: ({start, end}) => {
+              return (moment.utc(start).format('DD/MM/YYYY') + ' - ' + moment.utc(end).format('DD/MM/YYYY') );
+          },
+          eventTimeRangeFormat:'HH:ss' */
+          /* dateFormat: 'dd',
+          dayFormat: (date, , localizer) =>
+            localizer.format(date, 'DDD', culture),
+        
+          dayRangeHeaderFormat: ({ start, end }, culture, localizer) =>
+            localizer.format(start, { date: 'short' }, culture) + ' — ' +
+            localizer.format(end, { date: 'short' }, culture) */
+        }}
       />
       {
         this.state.showForm &&
@@ -207,7 +223,9 @@ export default class Calendar extends React.Component{
                 } else if ( element.type === 'relationship') {
                   form_data.append(element.details.column, values[element.details.column]);
                 } else if ( element.type === 'date') {
-                  form_data.append(element.field,moment(values[element.field][0]));
+                  //2020-09-22 17:00:00
+                  console.log(moment(values[element.field][0]).utc().format("YYYY-MM-DD HH:mm:ss"));
+                  form_data.append(element.field,moment(values[element.field][0]).format("YYYY-MM-DD HH:mm:ss"));
                 } else {
                   form_data.append(element.field,values[element.field]);
 
@@ -277,8 +295,9 @@ export default class Calendar extends React.Component{
                       //actions.setErrors(er.response.data.errors)
                     })
                 } else {
+                  form_data.append("_method","PUT");
                   request
-                    .put(`/api/appointments/${this.state.appointment.id}`, 
+                    .post(`/api/appointments/${this.state.appointment.id}`, 
                       form_data,{
                         headers:{
                           'Content-Type': 'multipart/form-data'

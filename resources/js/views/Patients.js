@@ -164,7 +164,10 @@ export default class Patients extends React.Component {
         createFormFields: data.dataType.readRows,
         createResponse: data.dataType,
         showForm: true,
-        initialValues: data.dataTypeContent,
+        initialValues: {
+          ...data.dataTypeContent,
+          birthdate: [moment(data.dataTypeContent.birthdate).toDate()]
+        },
         addForm: false
       })
     })
@@ -421,6 +424,9 @@ export default class Patients extends React.Component {
                           <InputDateFormik
                             name="birthdate"
                             placeholder="Fecha de Nacimiento"
+                            options={{
+                              defaultDate: moment().subtract(18,'year').toDate()
+                            }}
                           />
                           <InputTextFormik
                             value={values.birthdate && values.birthdate[0] && moment(values.birthdate[0]).isValid() ?  moment().year() - moment(values.birthdate[0]).year() : ""}
@@ -597,6 +603,7 @@ export default class Patients extends React.Component {
                 //form_data.append("odontograma",values.odontograma)
                 form_data.append("diseases", JSON.stringify(this.state.initialValues.diseases))
                 form_data.append("odontograma", JSON.stringify(values.odontograma))
+                form_data.append("_method","PUT")
                 /* for (let index = 0; index < this.state.createFormFields.length; index++) {
                   const element = this.state.createFormFields[index];
                   if(element.type === 'image' && values[element.field]  instanceof File ) {
@@ -608,7 +615,7 @@ export default class Patients extends React.Component {
                   }
                 } */
                 request
-                  .put(`/api/${this.state.createResponse.slug}/${this.state.initialValues.id}`,
+                  .post(`/api/${this.state.createResponse.slug}/${this.state.initialValues.id}`,
                     form_data, {
                     headers: {
                       'Content-Type': 'multipart/form-data'
@@ -625,18 +632,45 @@ export default class Patients extends React.Component {
                 <Form className="modal-form">
                   <div className="custom-wrapper large">
                     <div className="close-icon" onClick={this.close}>x</div>
-                    <InputEasyImageFormik
-                      name="avatar"
-                    />
-                    <div className="row-input">
-                      <InputTextFormik
-                        name="name"
-                        placeholder="Nombre de Paciente"
+                    <div style={{
+                      flexDirection:'row',
+                      display: 'flex'
+                    }}>
+                      <InputEasyImageFormik
+                        name="avatar"
                       />
-                      <InputTextFormik
-                        name="last_name"
-                        placeholder="Apellido de Paciente"
-                      />
+                      <div>
+                        <div className="row-input">
+                          <InputTextFormik
+                            name="name"
+                            placeholder="Nombre de Paciente"
+                            disabled
+                          />
+                          <InputTextFormik
+                            name="last_name"
+                            placeholder="Apellido de Paciente"
+                            disabled
+                          />
+                          <InputTextFormik
+                            value={values.birthdate && values.birthdate[0] && moment(values.birthdate[0]).isValid() ?  moment().year() - moment(values.birthdate[0]).year() : ""}
+                            valueChange
+                            placeholder="Edad"
+                            disabled
+                          />
+                        </div>
+                        <div className="row-input">
+                          <InputTextFormik
+                            name="document_number"
+                            placeholder="DNI"
+                            disabled
+                          />
+                          <InputTextFormik
+                            name="phone_number"
+                            placeholder="Nro de Celular" 
+                            disabled
+                          />
+                        </div>
+                      </div>
                     </div>
 
                     <div>

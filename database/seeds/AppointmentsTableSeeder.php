@@ -24,7 +24,7 @@ class AppointmentsTableSeeder extends Seeder
                 'display_name_plural'   => __('seeders.data_types.appointments.plural'),
                 'icon'                  => 'voyager-news',
                 'model_name'            => 'App\\Appointment',
-                'policy_name'           => 'TCG\\Voyager\\Policies\\PostPolicy',
+                'policy_name'           => '',
                 'controller'            => '',
                 'generate_permissions'  => 1,
                 'description'           => '',
@@ -83,7 +83,7 @@ class AppointmentsTableSeeder extends Seeder
         $dataRow = $this->dataRow($dataType, 'patient_id');
         if (!$dataRow->exists) {
             $dataRow->fill([
-                'type'         => 'integer',
+                'type'         => 'text',
                 'display_name' => __('seeders.data_rows.patient'),
                 'required'     => 1,
                 'browse'       => 0,
@@ -110,7 +110,7 @@ class AppointmentsTableSeeder extends Seeder
                   'model'       => 'App\\Patient',
                   'table'       => 'patients',
                   'type'        => 'belongsTo',
-                  'column'      => 'patients',
+                  'column'      => 'patient_id',
                   'key'         => 'id',
                   'label'       => 'name',
                   'pivot_table' => 'patients',
@@ -122,7 +122,7 @@ class AppointmentsTableSeeder extends Seeder
         $dataRow = $this->dataRow($dataType, 'consulting_room_id');
         if (!$dataRow->exists) {
             $dataRow->fill([
-                'type'         => 'integer',
+                'type'         => 'text',
                 'display_name' => __('seeders.data_rows.consulting_room_id'),
                 'required'     => 1,
                 'browse'       => 0,
@@ -148,7 +148,7 @@ class AppointmentsTableSeeder extends Seeder
                   'model'       => 'App\\ConsultingRoom',
                   'table'       => 'consulting_room',
                   'type'        => 'belongsTo',
-                  'column'      => 'consulting_room',
+                  'column'      => 'consulting_room_id',
                   'key'         => 'id',
                   'label'       => 'name',
                   'pivot_table' => 'consulting_room',

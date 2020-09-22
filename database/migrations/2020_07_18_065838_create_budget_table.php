@@ -15,12 +15,12 @@ class CreateBudgetTable extends Migration
     {
         Schema::create('budget', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('clinic_history');
-            $table->integer('agreement');
-            $table->string('code_budget');
-            $table->string('total');
-            $table->string('balance');
-            $table->string('partial_payment');
+            $table->integer('clinic_history')->nullable();
+            $table->integer('agreement')->nullable();
+            $table->string('code_budget')->nullable();
+            $table->string('total')->nullable();
+            $table->string('balance')->nullable();
+            $table->string('partial_payment')->nullable();
             $table->timestamps();
         });
     }
