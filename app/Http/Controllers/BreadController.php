@@ -645,18 +645,7 @@ class BreadController extends Controller
         $val = $this->validateBread($request->all(), $dataType->addRows)->validate();
         $data = null;
         dump("here1");
-        try {
-          $data = $this->insertUpdateData($request, $slug, $dataType->addRows, new $dataType->model_name());
-        dump("Here2");
-        dd($data);
-        }catch(\Exception  $e) {
-        dump("Hereg");
-        dump($e);
-
-            if($e->getMessage() !== "Session store not set on request.") {
-                throw $e;
-            }
-        }
+        $data = $this->insertUpdateData($request, $slug, $dataType->addRows, new $dataType->model_name());
         event(new BreadDataAdded($dataType, $data));
         return([
           'message'    => __('voyager::generic.successfully_added_new')." {$dataType->getTranslatedAttribute('display_name_singular')}",
