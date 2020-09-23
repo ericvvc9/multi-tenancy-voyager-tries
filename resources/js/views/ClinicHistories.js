@@ -378,6 +378,7 @@ export default class ClinicHistories extends React.Component {
                       let isEdition = false;
                       if(
                         this.state.history && 
+                        this.state.history.clinic_history_hasone_budget_relationship &&
                         this.state.history.clinic_history_hasone_budget_relationship.id
                       ){
                         isEdition = true;
