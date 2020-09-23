@@ -649,7 +649,10 @@ class BreadController extends Controller
           $data = $this->insertUpdateData($request, $slug, $dataType->addRows, new $dataType->model_name());
         dump("Here2");
         dd($data);
-        }catch(\RuntimeException  $e) {
+        }catch(\Exception  $e) {
+        dump("Hereg");
+        dump($e);
+
             if($e->getMessage() !== "Session store not set on request.") {
                 throw $e;
             }
