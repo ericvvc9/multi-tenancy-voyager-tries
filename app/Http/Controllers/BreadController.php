@@ -644,7 +644,6 @@ class BreadController extends Controller
         // Validate fields with ajax
         $val = $this->validateBread($request->all(), $dataType->addRows)->validate();
         $data = null;
-        dump("here1");
         $data = $this->insertUpdateData($request, $slug, $dataType->addRows, new $dataType->model_name());
         event(new BreadDataAdded($dataType, $data));
         return([
