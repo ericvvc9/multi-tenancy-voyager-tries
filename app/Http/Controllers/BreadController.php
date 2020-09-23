@@ -644,9 +644,11 @@ class BreadController extends Controller
         // Validate fields with ajax
         $val = $this->validateBread($request->all(), $dataType->addRows)->validate();
         $data = null;
+        dump("here1");
         try {
           $data = $this->insertUpdateData($request, $slug, $dataType->addRows, new $dataType->model_name());
-
+        dump("Here2");
+        dd($data);
         }catch(\RuntimeException  $e) {
             if($e->getMessage() !== "Session store not set on request.") {
                 throw $e;
