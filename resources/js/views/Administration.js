@@ -9,6 +9,7 @@ import Input from '../components/Input';
 import classnames from 'classnames';
 import ReactTable from 'react-table'
 import q from 'query-string'
+import Row from '../components/Row';
 
 const localizer = momentLocalizer(moment)
 export default class Administration extends React.Component {
@@ -76,10 +77,16 @@ export default class Administration extends React.Component {
   getType = (index) => {
     request.get(`/api/alldatatypesfrom?id=${this.state.dataTypes[index].id}`).then((data2) => {
       let dataTypes = this.state.dataTypes;
-      dataTypes[index].meta = data2;
       let relationships = data2.filter((field) => { 
         return field.type === 'relationship'
       })
+      const meta =data2.filter((field) => {
+        return relationships.find((rel) => {
+          return rel.field === field.field
+        }) === undefined
+      });
+      
+      dataTypes[index].meta = meta
       if(relationships.length > 0) {
         let reqsWithId = data2.map((data,index2) => {
           return {
@@ -97,7 +104,7 @@ export default class Administration extends React.Component {
           response.forEach((resp,index3) => {
             data2[onlyRels[index3].index].options = resp.results;
           })
-          dataTypes[index].meta = data2;
+          dataTypes[index].meta = meta;
           this.setState({
             dataTypes,
             selectedIndex:index
@@ -334,32 +341,44 @@ export default class Administration extends React.Component {
                       `Editar ${this.state.createResponse.display_name_singular}`
                     }
                     {
-                      this.state.createFormFields.map((field) => {
-                        return <div>
-                          {
-                            field.type === 'relationship' ?
-                            <Field
-                              name={field.details.column}
-                              id={field.details.column}
-                              type={field.type}
-                              component={Input}
-                              slug={this.state.createResponse.slug}
-                              placeholder={field.display_name}
-                              fieldDescription={field}
-                            />
-                            :
-                            <Field
-                              name={field.field}
-                              id={field.field}
-                              type={field.type}
-                              component={Input}
-                              slug={this.state.createResponse.slug}
-                              placeholder={field.display_name}
-                              fieldDescription={field}
-                            />
+                      this.state.createFormFields.reduce(function(r, element, index) {
+                        // create element groups with size 3, result looks like:
+                        // [[elem1, elem2, elem3], [elem4, elem5, elem6], ...]
+                        index % 2 === 0 && r.push([]);
+                        r[r.length - 1].push(element);
+                        return r;
+                    }, []).map((fields) => {
+                        return <Row>
+
+                          { fields.map((field) => {
+                            return <>
+                              {
+                                field.type === 'relationship' ?
+                                <Field
+                                  name={field.details.column}
+                                  id={field.details.column}
+                                  type={field.type}
+                                  component={Input}
+                                  slug={this.state.createResponse.slug}
+                                  placeholder={field.display_name}
+                                  fieldDescription={field}
+                                />
+                                :
+                                <Field
+                                  name={field.field}
+                                  id={field.field}
+                                  type={field.type}
+                                  component={Input}
+                                  slug={this.state.createResponse.slug}
+                                  placeholder={field.display_name}
+                                  fieldDescription={field}
+                                />
+                              }
+                            </>
+                          })
                           }
                           
-                        </div>
+                        </Row>
                       })
                     }
                     {

@@ -6,8 +6,11 @@ import { Formik, Form, Field } from 'formik';
 import DateTimePicker from '../components/DateTimePicker';
 import q from 'query-string'
 import { request, reasons } from '../utils';
+import specialities from '../assets/data/specialities.json'
 import Input from '../components/Input';
 import * as Yup from 'yup'
+import Row from '../components/Row';
+import SelectFormik from '../components/SelectFormik';
 
 const schema = Yup.object().shape({
   start_date:  Yup.date()
@@ -103,7 +106,7 @@ export default class Calendar extends React.Component{
       this.setState({
         events: events.map((event) => {
           return {
-            title: `${moment(event.start_date).format("HH:mm")} ${event.patient_id_display_name} ${event.reason}`,
+            title: `${moment(event.start_date).format("HH:mm")} ${event.patient_id.name} ${event.patient_id.last_name} ${event.reason}`,
             // Hora minutos y el nombre
             start: moment(event.start_date).toDate(),
             end: moment(event.start_date).clone().add(1,'hour').toDate(),
@@ -124,30 +127,18 @@ export default class Calendar extends React.Component{
       s:event.patient_id
       //s:values.document_number
     })
-    request.get(`/api/patients?${query}`).then(({data}) => {
-      if(data.length>0) {
-        this.setState({
-          appointment: {
-            ...event,
-            patient_id:data[0].id,
-            name:data[0].name,
-            last_name:data[0].last_name,
-            phone_number:data[0].phone_number,
-            document_number:data[0].document_number,
-            email:data[0].email,
-          },
-          showForm:true,
-          addForm:false
-        })
-      } else {
-        this.setState({
-          appointment: {
-            ...event,
-          },
-          showForm:true,
-          addForm:false
-        })
-      }
+    this.setState({
+      appointment: {
+        ...event,
+        patient_id:event.patient_id.id,
+        name:event.patient_id.name,
+        last_name:event.patient_id.last_name,
+        phone_number:event.patient_id.phone_number,
+        document_number:event.patient_id.document_number,
+        email:event.patient_id.email,
+      },
+      showForm:true,
+      addForm:false
     })
   }
 
@@ -330,91 +321,104 @@ export default class Calendar extends React.Component{
                       component={DateTimePicker}
                       placeholder={"Fecha y Hora de Inicio"}
                     />
-                    <Field
-                      name={"document_number"}
-                      id={"document_number"}
-                      type={"text"}
-                      component={Input}
-                      onEnter={(ele) => {
-                        ele.stopPropagation()
-                        ele.preventDefault()
-                        let query = q.stringify({
-                          key:"document_number",
-                          filter:"equals",
-                          s:values.document_number
-                        })
-                        request.get(`/api/patients?${query}`).then(({data}) => {
-                          if(data.length>0) {
-                            rest.setFieldValue('patient_id',data[0].id)
-                            rest.setFieldValue('name',data[0].name)
-                            rest.setFieldValue('last_name',data[0].last_name)
-                            rest.setFieldValue('phone_number',data[0].phone_number)
-                            rest.setFieldValue('email',data[0].email)
-                          } else {
-                            rest.setFieldValue('patient_id',"")
-                            rest.setFieldValue('name',"")
-                            rest.setFieldValue('last_name',"")
-                            rest.setFieldValue('phone_number',"")
-                            rest.setFieldValue('email',"")
-                          }
-                        })
-                      }}
-                      placeholder={"Número de Documento"}
-                    />
-                    <Field
-                      name={"name"}
-                      id={"name"}
-                      type={"text"}
-                      component={Input}
-                      placeholder={"Nombres"}
-                    />
-                    <Field
-                      name={"last_name"}
-                      id={"last_name"}
-                      type={"text"}
-                      component={Input}
-                      placeholder={"Apellidos"}
-                    />
-                    <Field
-                      name={"phone_number"}
-                      id={"phone_number"}
-                      type={"text"}
-                      component={Input}
-                      placeholder={"Telefono"}
-                    />
-                    <Field
-                      name={"email"}
-                      id={"email"}
-                      type={"text"}
-                      component={Input}
-                      placeholder={"Email"}
-                    />
-                    <Field
-                      name={"consulting_room_id"}
-                      id={"consulting_room_id"}
-                      type={"relationship"}
-                      component={Input}
-                      slug={"appointments"}
-                      placeholder={"Consultorio"}
-                      fieldDescription={{
-                        field:"appointment_belonsto_consulting_room_relationship"
-                      }}
-                    />
-                    <Field
-                      name={"reason"}
-                      id={"reason"}
-                      type={"text"}
-                      options={reasons}
-                      component={Input}
-                      placeholder={"Motivo"}
-                    />
-                    <Field
-                      name={"speciality"}
-                      id={"speciality"}
-                      type={"text"}
-                      component={Input}
-                      placeholder={"Especialidad"}
-                    />
+                    <Row>
+                      
+                      <Field
+                        name={"document_number"}
+                        id={"document_number"}
+                        type={"text"}
+                        component={Input}
+                        onEnter={(ele) => {
+                          ele.stopPropagation()
+                          ele.preventDefault()
+                          let query = q.stringify({
+                            key:"document_number",
+                            filter:"equals",
+                            s:values.document_number
+                          })
+                          request.get(`/api/patients?${query}`).then(({data}) => {
+                            if(data.length>0) {
+                              rest.setFieldValue('patient_id',data[0].id)
+                              rest.setFieldValue('name',data[0].name)
+                              rest.setFieldValue('last_name',data[0].last_name)
+                              rest.setFieldValue('phone_number',data[0].phone_number)
+                              rest.setFieldValue('email',data[0].email)
+                            } else {
+                              rest.setFieldValue('patient_id',"")
+                              rest.setFieldValue('name',"")
+                              rest.setFieldValue('last_name',"")
+                              rest.setFieldValue('phone_number',"")
+                              rest.setFieldValue('email',"")
+                            }
+                          })
+                        }}
+                        placeholder={"Número de Documento"}
+                      />
+                    </Row>
+                    <Row>
+
+                      <Field
+                        name={"name"}
+                        id={"name"}
+                        type={"text"}
+                        component={Input}
+                        placeholder={"Nombres"}
+                      />
+                      <Field
+                        name={"last_name"}
+                        id={"last_name"}
+                        type={"text"}
+                        component={Input}
+                        placeholder={"Apellidos"}
+                      />
+                    </Row>
+                    <Row>
+
+                      <Field
+                        name={"phone_number"}
+                        id={"phone_number"}
+                        type={"text"}
+                        component={Input}
+                        placeholder={"Telefono"}
+                      />
+                      <Field
+                        name={"email"}
+                        id={"email"}
+                        type={"text"}
+                        component={Input}
+                        placeholder={"Email"}
+                      />
+                    </Row>
+                    <Row>
+
+                      <Field
+                        name={"consulting_room_id"}
+                        id={"consulting_room_id"}
+                        type={"relationship"}
+                        component={Input}
+                        slug={"appointments"}
+                        placeholder={"Consultorio"}
+                        fieldDescription={{
+                          field:"appointment_belonsto_consulting_room_relationship"
+                        }}
+                      />
+                      <Field
+                        name={"reason"}
+                        id={"reason"}
+                        type={"text"}
+                        options={reasons}
+                        component={Input}
+                        placeholder={"Motivo"}
+                      />
+                    </Row>
+                    <Row>
+                      
+                      <SelectFormik
+                        name="speciality"
+                        options={specialities}
+                        placeholder="Especialidad"
+                      />
+                    </Row>
                   </div>
                   <button className="button" type="submit">Confirmar Cita</button>
                 </div>

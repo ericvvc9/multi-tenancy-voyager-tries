@@ -24,7 +24,6 @@ import Odontrogram from "./Odontogram";
 class WrapOdontrogram extends React.Component {
 
   render() {
-    
     return <Odontrogram 
       value={this.props.field.value}
       onChange={(value) => {

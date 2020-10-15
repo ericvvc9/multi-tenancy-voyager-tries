@@ -112,7 +112,7 @@ class AppointmentsTableSeeder extends Seeder
                   'type'        => 'belongsTo',
                   'column'      => 'patient_id',
                   'key'         => 'id',
-                  'label'       => 'name',
+                  'label'       => 'display_name',
                   'pivot_table' => 'patients',
                   'pivot'       => 0,
               ],

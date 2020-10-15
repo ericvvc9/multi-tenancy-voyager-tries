@@ -41,4 +41,14 @@ class User extends \TCG\Voyager\Models\User
         return $query->where('role_id', 3);
         //return dd($this->role);
     }
+    
+
+    public function getDisplayNameAttribute($value)
+    {
+        if( isInsideAdmin() ) {
+            return $value . " " . $this->last_name;
+        } else {
+            return $this;
+        }
+    }
 }

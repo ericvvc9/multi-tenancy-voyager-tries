@@ -55,8 +55,15 @@ export default class ClinicHistories extends React.Component {
     }
 
     request.get(`/api/clinic_histories?${page}`).then((data3) => {
+      
+      
       this.setState({
-        list: data3.data,
+        list: data3.data.map((d) => {
+          return {
+            ...d,
+            date: moment(d.date + "+00:00").format("YYYY-MM-DD HH:mm:ss")
+          }
+        }),
         perPage: data3.per_page,
         currentPage: data3.current_page,
         totalPages: data3.last_page
@@ -69,6 +76,9 @@ export default class ClinicHistories extends React.Component {
     this.setState({
       currentView: 'history',
       addHistory: true,
+      history: {
+        date: new Date()
+      }
     })
   }
 
@@ -77,6 +87,26 @@ export default class ClinicHistories extends React.Component {
   }
   export = () => {
 
+  }
+
+  generate = (values) => () =>{
+    request.post(`/api/clinic_histories`, {
+      date: values.date instanceof Date ? values.date : typeof(values.date) === 'object' && values.date[0] ? values.date[0] : '',
+      consulting_room: values.consulting_room ? values.consulting_room.id:'',
+      treatment: values.treatment,
+      doctor_id: values.doctor_id ? values.doctor_id.id:'',
+      patient_id: this.props.initialValues.id,
+      observations: values.observations,
+    })
+    .then(response => {
+      this.setState({
+        history: response.data,
+        addHistory:false
+      })
+      //
+    }).catch((er) => {
+      //actions.setErrors(er.response.data.errors)
+    })
   }
 
   goToBudget = () => {
@@ -183,8 +213,8 @@ export default class ClinicHistories extends React.Component {
                           }
                         }
                       }}
-                      pageSizeOptions={[15]}
-                      defaultPageSize={15}
+                      pageSizeOptions={[10]}
+                      defaultPageSize={10}
                       manual={true}// Forces table not to paginate or sort automatically, so we can handle it server-side
                       onFetchData={this.getClinicHistory} // Request new data when things change
                       data={this.state.list}
@@ -196,19 +226,29 @@ export default class ClinicHistories extends React.Component {
                           accessor: 'date', // String-based value accessors!
                         },
                         {
+                          id: 'c',
                           Header: 'CONSULTORIO',
-                          accessor: 'consulting_room_display_name', // String-based value accessors!
+                          accessor: (row) => {
+                            return row.consulting_room ? row.consulting_room.name: ''
+                          }
                         },
                         {
+                          id: 'doctor',
                           Header: 'DOCTOR',
-                          accessor: 'doctor_id_display_name', // String-based value accessors!
+                          accessor: (row) => {
+                            return row.doctor_id ? row.doctor_id.name + ' '+ row.doctor_id.last_name: ''
+                          }, // String-based value accessors!
                         },
                         {
                           Header: 'TRATAMIENTO',
                           accessor: 'treatment', // String-based value accessors!
                         },
                         {
-                          Header: 'PRESUPUESTO',
+                          Header: 'TOTAL',
+                          accessor: 'clinic_history_hasone_budget_relationship.total', // String-based value accessors!
+                        },
+                        {
+                          Header: 'Saldo',
                           accessor: 'clinic_history_hasone_budget_relationship.balance', // String-based value accessors!
                         },
                         {
@@ -245,16 +285,18 @@ export default class ClinicHistories extends React.Component {
                         request
                           .post(`/api/clinic_histories`, {
                             date: typeof(values.date) === 'object' && values.date[0] ? values.date[0] : '',
-                            consulting_room: values.consulting_room.id,
+                            consulting_room: values.consulting_room ? values.consulting_room.id :'',
                             treatment: values.treatment,
-                            doctor_id: values.doctor_id.id,
+                            doctor_id: values.doctor_id ? values.doctor_id.id: '',
                             patient_id: this.props.initialValues.id,
                             observations: values.observations,
                           })
                           .then(response => {
                             this.setState({
                               currentView: 'budget',
-                              history: response.data
+                              history: {
+                                ...response.data
+                              }
                             })
                             //
                           }).catch((er) => {
@@ -262,13 +304,14 @@ export default class ClinicHistories extends React.Component {
                           })
                       } else {
                         request
-                          .put(`/api/clinic_histories/${this.state.history.id}`, {
+                          .post(`/api/clinic_histories/${this.state.history.id}`, {
                             date:  typeof(values.date) === 'object' && values.date[0] ? values.date[0] :  values.date,
-                            consulting_room: values.consulting_room.id || values.consulting_room,
+                            consulting_room: values.consulting_room ? values.consulting_room.id:'',
                             treatment: values.treatment,
-                            doctor_id: values.doctor_id.id ||  values.doctor_id,
+                            doctor_id: values.doctor_id ? values.doctor_id.id: '',
                             patient_id: this.props.initialValues.id,
                             observations: values.observations,
+                            _method: 'PUT'
                           })
                           .then(response => {
                             this.setState({
@@ -287,6 +330,10 @@ export default class ClinicHistories extends React.Component {
                       <Form >
                         <InputDateFormik
                           name="date"
+                          options={{
+                            enableTime: true,
+                            defaultDate: moment().toDate()
+                          }}
                           placeholder="Fecha"
                         />
                         <AsyncSelectFormik
@@ -294,6 +341,12 @@ export default class ClinicHistories extends React.Component {
                           slug="clinic_histories"
                           relation="clinic_history_belonsto_consulting_room_relationship"
                           placeholder="Seleccionar Consultorio"
+                          getOptionValue={(option) => {
+                            return option.value
+                          }}
+                          getOptionLabel = {(option) => {
+                            return option.name || option.text
+                          }}
                         />
 
                         <SelectFormik
@@ -306,6 +359,12 @@ export default class ClinicHistories extends React.Component {
                           slug="clinic_histories"
                           relation="clinic_history_belonsto_doctor_relationship"
                           placeholder="Seleccionar Doctor"
+                          getOptionValue={(option) => {
+                            return option.value
+                          }}
+                          getOptionLabel = {(option) => {
+                            return option.name || (typeof(option.text) === 'object' ? option.text.name + ' ' + option.text.last_name :option.text)
+                          }}
                         />
                         <InputTextAreaFormik
                           name="observations"
@@ -317,10 +376,13 @@ export default class ClinicHistories extends React.Component {
                         </button> */}
                           {
                             this.state.addHistory ?
-                              <button className="button mx-1" type="submit">Generar</button>
+                              <>
+                                <button className="button mx-1" type="button" onClick={this.generate(values)}>Guardar</button>
+                                <button className="button mx-1" type="submit">Generar presupuesto</button>
+                              </>
                               :
                               <>
-                                <button className="button mx-1" type="submit">Editar</button>
+                                <button className="button mx-1" type="submit">Guardar</button>
                                 {
                                   typeof this.state.history.clinic_history_hasone_budget_relationship !== 'undefined' ?
                                   <button
@@ -430,9 +492,18 @@ export default class ClinicHistories extends React.Component {
                               name="date"
                               placeholder="Fecha"
                               disabled
+                              options={{
+                                enableTime: true,
+                              }}
                             />
                             <AsyncSelectFormik
                               name="consulting_room"
+                              getOptionValue={(option) => {
+                                return option.value
+                              }}
+                              getOptionLabel = {(option) => {
+                                return option.name || (typeof(option.text) === 'object' ? option.text.name + ' ' + option.text.last_name :option.text)
+                              }}
                               slug="clinic_histories"
                               relation="clinic_history_belonsto_consulting_room_relationship"
                               placeholder="Seleccionar Consultorio"
@@ -448,6 +519,12 @@ export default class ClinicHistories extends React.Component {
                             />
                             <AsyncSelectFormik
                               name="doctor_id"
+                              getOptionValue={(option) => {
+                                return option.value
+                              }}
+                              getOptionLabel = {(option) => {
+                                return option.name || (typeof(option.text) === 'object' ? option.text.name + ' ' + option.text.last_name :option.text)
+                              }}
                               slug="clinic_histories"
                               relation="clinic_history_belonsto_doctor_relationship"
                               placeholder="Seleccionar Doctor"

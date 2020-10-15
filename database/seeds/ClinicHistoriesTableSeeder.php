@@ -113,7 +113,7 @@ class ClinicHistoriesTableSeeder extends Seeder
                   'type'        => 'belongsTo',
                   'column'      => 'consulting_room',
                   'key'         => 'id',
-                  'label'       => 'name',
+                  'label'       => 'display_name',
                   'pivot_table' => 'consulting_room',
                   'pivot'       => 0,
               ],
@@ -152,7 +152,7 @@ class ClinicHistoriesTableSeeder extends Seeder
                   'type'        => 'belongsTo',
                   'column'      => 'doctor_id',
                   'key'         => 'id',
-                  'label'       => 'name',
+                  'label'       => 'display_name',
                   'pivot_table' => 'users',
                   'pivot'       => 0,
                   "scope" => "doctor"

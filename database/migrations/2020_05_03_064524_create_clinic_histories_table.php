@@ -15,7 +15,7 @@ class CreateClinicHistoriesTable extends Migration
     {
         Schema::create('clinic_histories', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->date('date');
+            $table->dateTime('date');
             $table->integer('consulting_room')->nullable();
             $table->string('treatment')->nullable();
             $table->integer('doctor_id')->nullable();

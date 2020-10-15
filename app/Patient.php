@@ -36,5 +36,13 @@ class Patient extends Model
     {
         return collect(json_decode($value));
     } */
+    public function getDisplayNameAttribute($value)
+    {
+        if( isInsideAdmin() ) {
+            return $value . " " . $this->last_name;
+        } else {
+            return $this;
+        }
+    }
 
 }

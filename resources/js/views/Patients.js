@@ -13,8 +13,6 @@ import InputEasyImageFormik from '../components/InputEasyImageFormik';
 import InputTextFormik from '../components/InputTextFormik';
 import InputCheckboxFormik from '../components/InputCheckboxFormik';
 import Modal from '../components/Modal';
-import Odontrogram from '../components/Odontogram';
-import Odontogram from '../components/Odontogram';
 import FormikOdontrogram from '../components/Odontogram/FormikOdontrogram';
 import InputDateFormik from '../components/InputDateFormik';
 import ClinicHistories from './ClinicHistories';
@@ -122,7 +120,20 @@ export default class Patients extends React.Component {
     request.get(`/api/${this.state.dataTypes[this.state.selectedIndex].slug}?${page}`).then((data3) => {
       if (this.state.dataTypes[this.state.selectedIndex].server_side === 1) {
         this.setState({
-          list: data3.data,
+          list: data3.data.map((r) => {
+            let odJson;
+            try {
+              if(r.odontograma) {
+                odJson = JSON.parse(r.odontograma)
+              }
+            } catch (error) {
+              odJson = {}
+            }
+            return {
+              ...r,
+              odontograma: r.odontograma
+            }
+          }),
           perPage: data3.per_page,
           currentPage: data3.current_page,
           totalPages: data3.last_page
@@ -160,13 +171,22 @@ export default class Patients extends React.Component {
     Promise.all([
       request.get(`/api/${this.state.dataTypes[this.state.selectedIndex].slug}/${data.id}`),
     ]).then(([data]) => {
+      let odJson;
+      try {
+        if(data.dataTypeContent.odontograma) {
+          odJson = JSON.parse(data.dataTypeContent.odontograma)
+        }
+      } catch (error) {
+        odJson = {}
+      }
       this.setState({
         createFormFields: data.dataType.readRows,
         createResponse: data.dataType,
         showForm: true,
         initialValues: {
           ...data.dataTypeContent,
-          birthdate: [moment(data.dataTypeContent.birthdate).toDate()]
+          birthdate: [moment(data.dataTypeContent.birthdate).toDate()],
+          odontograma: odJson
         },
         addForm: false
       })
@@ -297,8 +317,8 @@ export default class Patients extends React.Component {
                     }
                   }}
                   key={this.state.dataTypes[this.state.selectedIndex].slug}
-                  pageSizeOptions={[15]}
-                  defaultPageSize={15}
+                  pageSizeOptions={[10]}
+                  defaultPageSize={10}
                   manual={this.state.dataTypes[this.state.selectedIndex].server_side === 1}// Forces table not to paginate or sort automatically, so we can handle it server-side
                   onFetchData={this.fetchData} // Request new data when things change
                   data={this.state.list}
@@ -444,7 +464,7 @@ export default class Patients extends React.Component {
                             ?  
                             <InputTextFormik
                               name="incharge_name"
-                              placeholder="Nombre de Encargado"
+                              placeholder="Nombre del tutor"
                             />
                             : null}
                           

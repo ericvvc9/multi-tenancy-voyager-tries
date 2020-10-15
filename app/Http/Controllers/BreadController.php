@@ -217,7 +217,7 @@ class BreadController extends Controller
                     dump(class_exists($options->model)); */
 
                                 if(isset($query)){
-                                    $data->{$options->column."_display_name"} = $query->{$options->label};
+                                    $data->{$options->column} = $query->{$options->label};
                                     "<p>{{ $query->{$options->label} }}</p>";
                                 }else{
                                     "<p>{{ __('voyager::generic.no_results') }}</p>";

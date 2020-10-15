@@ -41,6 +41,7 @@ class WrapSelect extends React.Component {
         classNamePrefix="select"
         {...this.props.field}
         {...this.props}
+        isDisabled={this.props.disabled}
         //value={this.props.field.value}
         value={this.getValue(this.props.options, this.props.field.value)}
         //getOptionLabel={option => option.value}

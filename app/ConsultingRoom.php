@@ -16,4 +16,10 @@ class ConsultingRoom extends Model
 
     protected $fillable = [ 'name'];
 
+    public function getDisplayNameAttribute() {
+        if( isInsideAdmin() || isRelationRequest() ) {
+            return $this->name;
+        }
+        return $this;
+    }
 }
