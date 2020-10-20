@@ -11,6 +11,7 @@ import Input from '../components/Input';
 import * as Yup from 'yup'
 import Row from '../components/Row';
 import SelectFormik from '../components/SelectFormik';
+import 'moment/locale/es'
 
 const schema = Yup.object().shape({
   start_date:  Yup.date()
@@ -155,6 +156,7 @@ export default class Calendar extends React.Component{
         onSelectEvent={this.onSelectEvent}
         startAccessor="start"
         endAccessor="end"
+        culture='es'
         style={{ height: 500 }}
         messages={{
           allDay: 'Todo el dia',

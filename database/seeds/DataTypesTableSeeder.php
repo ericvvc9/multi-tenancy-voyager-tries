@@ -18,7 +18,7 @@ class DataTypesTableSeeder extends Seeder
                 'display_name_plural'   => __('voyager::seeders.data_types.user.plural'),
                 'icon'                  => 'voyager-person',
                 'model_name'            => 'TCG\\Voyager\\Models\\User',
-                'policy_name'           => 'TCG\\Voyager\\Policies\\UserPolicy',
+                'policy_name'           => 'App\\Policies\\UserPolicy',
                 'controller'            => '',
                 'generate_permissions'  => 1,
                 'description'           => '',

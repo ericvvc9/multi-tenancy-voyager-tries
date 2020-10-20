@@ -672,10 +672,10 @@ class BreadController extends Controller
         if($request->headers->get('accept') !== 'application/json, text/plain, */*'){
             return parent::destroy($request, $id);
         }
-        $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
+        
+        $slug = $this->getSlug($request);
 
-        // Check permission
-        $this->authorize('delete', app($dataType->model_name));
+        $dataType = Voyager::model('DataType')->where('slug', '=', $slug)->first();
 
         // Init array of IDs
         $ids = [];
@@ -689,8 +689,11 @@ class BreadController extends Controller
         foreach ($ids as $id) {
             $data = call_user_func([$dataType->model_name, 'findOrFail'], $id);
 
+            // Check permission
+            $this->authorize('delete', $data);
+
             $model = app($dataType->model_name);
-            if (!($model && in_array(SoftDeletes::class, class_uses($model)))) {
+            if (!($model && in_array(SoftDeletes::class, class_uses_recursive($model)))) {
                 $this->cleanup($dataType, $data);
             }
         }

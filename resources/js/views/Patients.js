@@ -265,6 +265,29 @@ export default class Patients extends React.Component {
           }
         }
       }) : []
+    columns.push({
+      Header: '',
+      accessor: '', // String-based value accessors!
+      Cell: props => {
+        return <span onClick={(e) => {
+          e.stopPropagation();
+          if(window.confirm('Eliminar?')) {
+            if(this.state.dataTypes[this.state.selectedIndex]?.slug ) {
+              const data = props.original;
+              
+              var form_data = new FormData();
+              form_data.append("_method","DELETE");
+              request.post(`/api/${this.state.dataTypes[this.state.selectedIndex].slug}/${data.id}`, form_data).then(() => {
+                this.refresh();
+              })
+            }
+          }
+          //delete
+        }}>
+          Eliminar
+        </span>
+      }
+    })
 
     return (
       <div className="wrap-tabs">

@@ -18,9 +18,9 @@ class CreateUsersTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('last_name')->default("");
-            $table->string('document_number')->default("");
-            $table->string('phone_number')->default("");
-            $table->string('specialities')->default("");
+            $table->string('document_number')->default("")->nullable();
+            $table->string('phone_number')->default("")->nullable();
+            $table->string('specialities')->default("")->nullable();
             $table->string('username')->unique();
             $table->string('email')->unique();
             $table->string('api_token', 80)->unique()
