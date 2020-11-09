@@ -17,12 +17,14 @@ use Illuminate\Support\Str;
 
 
 Route::post('/login', 'ApiController@login');
-Route::middleware(['auth:api'])->group(function () {
+Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/user', function (Request $request) {
         $user=$request->user();
         $user->role->permissions;
         return $user;
     });
+    Route::get('logout', 'ApiController@logout');
+
 
     
     try {

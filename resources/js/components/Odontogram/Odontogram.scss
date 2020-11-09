@@ -530,6 +530,17 @@ $inToothWidth: 30px;
   border: 1px solid black;
   flex-wrap: wrap;
 }
+@media print {
+  .wrap-odontogram {
+    display: flex;
+    /* //position: fixed;
+    //top:0;
+    left:0; */
+  }
+  .right-odontogram-options {
+    display: none;
+  }
+}
 
 .break {
   flex-basis: 100%;

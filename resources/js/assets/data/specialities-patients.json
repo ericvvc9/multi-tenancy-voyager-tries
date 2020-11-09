@@ -1,0 +1,33 @@
+[
+  {
+    "label": "Rehabilitación oral",
+    "value":"Rehabilitación oral"
+  },{
+    "label": "Periodoncia",
+    "value":"Periodoncia"
+  },{
+    "label": "Endodoncia",
+    "value":"Endodoncia"
+  },{
+    "label": "Odontopediatría",
+    "value":"Odontopediatría"
+  },{
+    "label": "Ortodoncia",
+    "value":"Ortodoncia"
+  },{
+    "label": "Implantología",
+    "value":"Implantología"
+  },{
+    "label": "Odontología estética",
+    "value":"Odontología estética"
+  },{
+    "label": "Odontología preventiva",
+    "value":"Odontología preventiva"
+  },{
+    "label": "Cariología",
+    "value":"Cariología"
+  },{
+    "label": "Cirugía",
+    "value":"Cirugía"
+  }
+]

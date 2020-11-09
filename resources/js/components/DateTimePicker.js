@@ -26,6 +26,7 @@ export default class DateTimePicker extends React.Component {
           options={{
             enableTime: true,
             static: true,
+            ...this.props
             //noCalendar: true,
             //dateFormat: "H:i",
           }}

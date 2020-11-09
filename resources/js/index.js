@@ -7,6 +7,8 @@ import * as serviceWorker from "./serviceWorker"
 import { store, persistor } from "./redux/storeConfig/store"
 import "./index.scss"
 import { PersistGate } from 'redux-persist/integration/react'
+import 'animate.css';
+
 const LazyApp = lazy(() => import("./App"))
 
 // configureDatabase()

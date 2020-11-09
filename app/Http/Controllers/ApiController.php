@@ -42,9 +42,9 @@ class ApiController extends Controller
       if ($authAttempt) {
         $token = Str::random(60);
         $user = Auth::user();
-        $user->api_token = hash('sha256',$token);
-        $user->save();
-        return $token;
+        $token = $user->createToken('kiru-spa');
+
+        return $token->plainTextToken;
       } else {
         return response()->json([
           "message" => "Datos Incorrectos",
@@ -63,8 +63,7 @@ class ApiController extends Controller
     public function logout(Request $request)
     {
       $user = Auth::user();
-      $user->api_token = null;
-      $user->save();
+      $user->currentAccessToken()->delete();
       return ["success" => true];
     }
     

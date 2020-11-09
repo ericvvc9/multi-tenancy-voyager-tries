@@ -6,6 +6,11 @@ import { submitLogin } from '../redux/actions/auth/loginActions';
 import { connect } from 'react-redux';
 import logo from '../assets/img/logo.png'
 import { request } from '../utils';
+import facebook from '../assets/img/pages/login/facebook.svg';
+import whatsapp from '../assets/img/pages/login/whatsapp.svg';
+import instagram from '../assets/img/pages/login/instagram.svg';
+import youtube from '../assets/img/pages/login/youtube.svg';
+
 
 const formSchema = Yup.object().shape({
   email: Yup.string().required("Required"),
@@ -19,6 +24,9 @@ class Login extends React.Component {
         <div className="logo">
           <img className="img" src={logo} />
         </div>
+        <h2 className="text-primary">
+          <b>Bienvenidx a KIRU</b>
+        </h2>
         <Formik
           initialValues={{
             email:'',
@@ -75,6 +83,28 @@ class Login extends React.Component {
             </Form>
           )}
         </Formik>
+        <div className="wrap-social-icons">
+          <a className="icon-social" href="" target="_blank">
+            <img src={whatsapp} />
+          </a>
+          <a className="icon-social" href="" target="_blank">
+            <img src={facebook} />
+          </a>
+          <a className="icon-social" href="" target="_blank">
+            <img src={instagram} />
+          </a>
+          <a className="icon-social" href="" target="_blank">
+            <img src={youtube} />
+          </a>
+        </div>
+        <div style={{
+          marginTop: 10,
+          
+        }}>
+          <p className="text-primary">
+            Plataforma de Grupo Proefex - Derechos reservados
+          </p>
+        </div>
       </div>
 
     </>

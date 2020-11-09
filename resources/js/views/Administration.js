@@ -258,6 +258,17 @@ export default class Administration extends React.Component {
               {
                 this.state.dataTypes[this.state.selectedIndex] && this.state.dataTypes[this.state.selectedIndex].meta ?
                 <ReactTable
+                  previousText='Anterior'
+                  nextText='Siguiente'
+                  loadingText='Cargando...'
+                  noDataText='Sin registros'
+                  pageText='Pagina'
+                  ofText='de'
+                  rowsText='filas'
+                
+                  // Accessibility Labels
+                  pageJumpText='saltar a pagina'
+                  rowsSelectorText='filas por pagina'
                   getTdProps={(state, rowInfo, column, instance) => {
                     return {
                       onClick: (e, handleOriginal) => {

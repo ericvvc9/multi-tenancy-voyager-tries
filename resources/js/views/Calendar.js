@@ -6,13 +6,17 @@ import { Formik, Form, Field } from 'formik';
 import DateTimePicker from '../components/DateTimePicker';
 import q from 'query-string'
 import { request, reasons } from '../utils';
-import specialities from '../assets/data/specialities.json'
+import specialitiesPatient from '../assets/data/specialities-patients.json'
 import Input from '../components/Input';
 import * as Yup from 'yup'
 import Row from '../components/Row';
 import SelectFormik from '../components/SelectFormik';
 import 'moment/locale/es'
+import InputMask from '../components/InputMask';
 
+moment.updateLocale('es', {
+  months : 'Enero_Febrero_Marzo_Abril_Mayo_Junio_Julio_Agosto_Setiembre_Octubre_Noviembre_Diciembre'.split('_')
+});
 const schema = Yup.object().shape({
   start_date:  Yup.date()
     .required('Required'),
@@ -107,14 +111,15 @@ export default class Calendar extends React.Component{
       this.setState({
         events: events.map((event) => {
           return {
-            title: `${moment(event.start_date).format("HH:mm")} ${event.patient_id.name} ${event.patient_id.last_name} ${event.reason}`,
+            title: `${moment(event.start_date+"+00:00").format("HH:mm")} ${event.patient_id.name} ${event.patient_id.last_name} ${event.reason}`,
             // Hora minutos y el nombre
-            start: moment(event.start_date).toDate(),
-            end: moment(event.start_date).clone().add(1,'hour').toDate(),
+            start: moment(event.start_date+"+00:00").toDate(),
+            end: moment(event.start_date+"+00:00").clone().add(1,'hour').toDate(),
             //allDay?: boolean
             //resource?: any,
             ...event,
-            start_date: [moment(event.start_date).toDate()],
+            time_start_date:[moment(event.start_date+"+00:00").toDate()],
+            start_date: [moment(event.start_date+"+00:00").toDate()],
           }
         }),
       })
@@ -221,10 +226,11 @@ export default class Calendar extends React.Component{
                   form_data.append(element.field,moment(values[element.field][0]).format("YYYY-MM-DD HH:mm:ss"));
                 } else {
                   form_data.append(element.field,values[element.field]);
-
                 }
               }
-
+              form_data.delete('start_date');
+              form_data.append('start_date', moment(values['start_date'][0]).utc().format("YYYY-MM-DD") + " " + moment(values['time_start_date'][0]).utc().format("HH:mm:ss"))
+              
               new Promise((resolve) => {
                 let query = q.stringify({
                   key:"document_number",
@@ -317,12 +323,27 @@ export default class Calendar extends React.Component{
                     `Editar cita`
                   }
                   <div>
-                    <Field
-                      name={"start_date"}
-                      id={"start_date"}
-                      component={DateTimePicker}
-                      placeholder={"Fecha y Hora de Inicio"}
-                    />
+                    <Row>
+                      <Field
+                        name={"start_date"}
+                        id={"start_date"}
+                        altFormat="F j, Y"
+                        dateFormat="Y-m-d"
+                        enableTime={false}
+                        component={DateTimePicker}
+                        placeholder={"Fecha y Hora de Inicio"}
+                      />
+                      <Field
+                        name={"time_start_date"}
+                        id={"time_start_date"}
+                        component={DateTimePicker}
+                        minTime="07:00"
+                        maxTime="22:00"
+                        noCalendar
+                        dateFormat="H:i K"
+                        placeholder={"Fecha y Hora de Inicio"}
+                      />
+                    </Row>
                     <Row>
                       
                       <Field
@@ -380,7 +401,8 @@ export default class Calendar extends React.Component{
                         name={"phone_number"}
                         id={"phone_number"}
                         type={"text"}
-                        component={Input}
+                        component={InputMask}
+                        regex="[999999999]"
                         placeholder={"Telefono"}
                       />
                       <Field
@@ -404,20 +426,27 @@ export default class Calendar extends React.Component{
                           field:"appointment_belonsto_consulting_room_relationship"
                         }}
                       />
-                      <Field
+                      
+                      <SelectFormik
+                        name="reason"
+                        options={reasons}
+                        placeholder="Seleccionar Motivo"
+                      />
+                      {/* <Field
                         name={"reason"}
                         id={"reason"}
                         type={"text"}
                         options={reasons}
                         component={Input}
+                        type=""
                         placeholder={"Motivo"}
-                      />
+                      /> */}
                     </Row>
                     <Row>
                       
                       <SelectFormik
                         name="speciality"
-                        options={specialities}
+                        options={specialitiesPatient}
                         placeholder="Especialidad"
                       />
                     </Row>

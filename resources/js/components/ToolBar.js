@@ -20,7 +20,11 @@ class Toolbar extends React.Component {
         <div className="rbc-btn-group">
           <div className="btn" onClick={()=> {
             this.props.onClickButton()
-          }}>+ CREAR CITA</div>
+          }}>
+            <b>
+              + CREAR CITA
+            </b>
+          </div>
         </div>
 
         <div className="rbc-toolbar-label">

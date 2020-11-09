@@ -11,7 +11,6 @@ export default class CRM extends React.Component{
     
     return (<div>
       
-      <Odontrogram />
     </div>)
   }
 }

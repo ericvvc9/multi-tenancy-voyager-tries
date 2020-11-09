@@ -32,7 +32,8 @@ img {
     color: white;
     text-align: center;
     &.selected, &:hover {
-      background-color: rgba(0, 0, 0, 0.061);
+      //background-color: rgba(0, 0, 0, 0.061);
+      background-color: #338880;
     }
   }
 }
@@ -42,11 +43,11 @@ img {
 }
 .menu-list {
   .menu-tab {
-    border: 1px solid #529CAE;
+    border: 1px solid #338880;
     border-top: 0;
     position: relative;
     padding: 15px;
-    color:#529CAE;
+    color:#338880;
     cursor: pointer;
     &::after {
       content: "";
@@ -70,18 +71,18 @@ img {
       }
     }
     &:first-child {
-      border-top: 1px solid #529CAE;
+      border-top: 1px solid #338880;
     }
   }
 }
 .menu-table {
   flex: 1;
-  border: 1px solid #529CAE;
+  border: 1px solid #338880;
   padding: 1rem;
   overflow: auto;
 }
 .content {
-  border: 1px solid #529CAE;
+  border: 1px solid #338880;
 }
 .input-wrapper {
   position: relative;
@@ -133,7 +134,7 @@ vr {
   border:0;
   border-radius: 15px;
   padding: 0.325rem 0.625rem;
-  color: #529CAE;
+  color: #338880;
   font-weight: bold;
   margin: 1rem 0;
 }
@@ -143,7 +144,7 @@ vr {
   flex-direction: column;
 }
 .login-wrapper {
-  background:#529CAE;
+  background:#338880;
   width: 30rem;
   display: flex;
   align-items: center;
@@ -154,7 +155,7 @@ vr {
   border-bottom-right-radius: 2rem;
 }
 .custom-wrapper {
-  background:#529CAE;
+  background:#338880;
   width: 40rem;
   display: flex;
   flex-direction: column;
@@ -204,7 +205,7 @@ vr {
 }
 
 .btn {
-  background:#529CAE;
+  background:#338880;
   color: white;
   text-align: center;
   cursor: pointer;
@@ -213,7 +214,7 @@ vr {
 }
 
 .content-wrap {
-  border:1px solid #529CAE;
+  border:1px solid #338880;
   padding: 1rem;
   margin-bottom: 1rem;
 }
@@ -250,6 +251,7 @@ vr {
   bottom: 0;
   right: 0;
   left: 0;
+  z-index: 20;
   background: rgba(255,255,255,0.6);
   align-items: center;
   justify-content: center;
@@ -268,7 +270,7 @@ vr {
 .search-input {
   max-width: 100%;
   width: 10rem;
-  border: 1px solid #529CAE;
+  border: 1px solid #338880;
   border-radius: 12px;
   display: flex;
   margin-left: auto;
@@ -285,10 +287,10 @@ vr {
 }
 
 .table {
-  border: 1px solid #529CAE;
+  border: 1px solid #338880;
   thead {
     tr {
-      background-color: #529CAE;
+      background-color: #338880;
       color: white;
       text-transform: uppercase;
       th {
@@ -319,6 +321,11 @@ vr {
 .rbc-toolbar {
   display: flex;
 }
+
+.text-primary {
+  color: #338880 !important;
+}
+
 .rbc-btn-group {
   flex:1;
   justify-content: center;
@@ -348,7 +355,7 @@ vr {
   }
 }
 .rbc-date-cell > a, .rbc-date-cell > a:active, .rbc-date-cell > a:visited {
-  color:#529CAE !important;
+  color:#338880 !important;
   //font-weight: bold;
 }
 .row-input {
@@ -361,4 +368,26 @@ vr {
 .label-placeholder {
   color: white;
   font-size: 1rem;
+}
+
+.wrap-social-icons {
+  display: flex;
+  flex-direction: row;
+  margin-top: 10px;
+}
+
+.icon-social {
+  background-color: #338880;
+  border-radius: 100%;
+  padding:5px;
+  margin: 0 5px;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  img {
+    width: 20px;
+    height: 20px;
+  }
 }

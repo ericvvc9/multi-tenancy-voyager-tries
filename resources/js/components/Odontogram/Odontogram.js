@@ -1741,7 +1741,7 @@ export default class Odontrogram extends React.Component {
           </div>
         </div>
 
-        <div>
+        <div className="right-odontogram-options">
           <button type="button" onClick={this.clean}>Limpiar</button>
           <div className="right-side-options">
             <div className={
